@@ -1,0 +1,17 @@
+﻿<Window
+	x:Class="TimeLineTest.MainWindow"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:controls="clr-namespace:Whathecode.AxesPanels.Controls;assembly=Whathecode.AxesPanels"
+	Title="Time Line Test"
+	DataContext="{Binding RelativeSource={RelativeSource Self}}">
+	
+	<controls:TimeLine
+		Background="DodgerBlue"
+		VisibleInterval="[Feb 22 2015, Feb 24 2015]"
+		SnapsToDevicePixels="True"
+		ItemsSource="{Binding Items}">
+		
+	</controls:TimeLine>
+	
+</Window>

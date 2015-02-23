@@ -4,7 +4,7 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using Whathecode.AxesPanels.Internal;
 using Whathecode.System.Arithmetic.Range;
-using Whathecode.System.Windows.DependencyPropertyFactory.Aspects;
+using Whathecode.System.Windows.DependencyPropertyFactory;
 using Whathecode.System.Windows.DependencyPropertyFactory.Attributes;
 using Whathecode.System.Windows.DependencyPropertyFactory.Attributes.Coercion;
 
@@ -18,50 +18,84 @@ namespace Whathecode.AxesPanels
 	/// <typeparam name = "TXSize">The type used to specify distances in between two values of <see cref="TX" />.</typeparam>
 	/// <typeparam name = "TY">The type which determines the Y-axis.</typeparam>
 	/// <typeparam name = "TYSize">The type used to specify distances in between two values of <see cref="TY" />.</typeparam>
-	[WpfControl( typeof( AxesPanelBinding ) )]
 	abstract public class AxesPanel<TX, TXSize, TY, TYSize> : Panel
 		where TX : IComparable<TX> where TY : IComparable<TY>
 	{
 		static readonly Type Type = typeof( AxesPanel<TX, TXSize, TY, TYSize> );
+		public static readonly DependencyPropertyFactory<AxesPanelBinding> PropertyFactory 
+			= new DependencyPropertyFactory<AxesPanelBinding>( typeof( AxesPanel<TX, TXSize, TY, TYSize> ) );
+
+		// ReSharper disable StaticMemberInGenericType
+		public static readonly DependencyProperty MaximaXProperty = PropertyFactory[ AxesPanelBinding.MaximaX ];
+		public static readonly DependencyProperty MaximaYProperty = PropertyFactory[ AxesPanelBinding.MaximaY ];
+		public static readonly DependencyProperty MinimumSizeXProperty = PropertyFactory[ AxesPanelBinding.MinimumSizeX ];
+		public static readonly DependencyProperty MinimumSizeYProperty = PropertyFactory[ AxesPanelBinding.MinimumSizeY ];
+		public static readonly DependencyProperty VisibleIntervalXProperty = PropertyFactory[ AxesPanelBinding.VisibleIntervalX ];
+		public static readonly DependencyProperty VisibleIntervalYProperty = PropertyFactory[ AxesPanelBinding.VisibleIntervalY ];
+		// ReSharper restore StaticMemberInGenericType
 
 
 		/// <summary>
 		///   The maximum range within which all values on the X-axis must lie.
 		/// </summary>
 		[DependencyProperty( AxesPanelBinding.MaximaX )]
-		public Interval<TX, TXSize> MaximaX { get; set; }
+		public Interval<TX, TXSize> MaximaX
+		{
+			get { return (Interval<TX, TXSize>)PropertyFactory.GetValue( this, AxesPanelBinding.MaximaX ); }
+			set { PropertyFactory.SetValue( this, AxesPanelBinding.MaximaX, value ); }
+		}
 
 		/// <summary>
 		///   The maximum range within which all values on the Y-axis must lie.
 		/// </summary>
 		[DependencyProperty( AxesPanelBinding.MaximaY )]
-		public Interval<TY, TYSize> MaximaY { get; set; }
+		public Interval<TY, TYSize> MaximaY
+		{
+			get { return (Interval<TY, TYSize>)PropertyFactory.GetValue( this, AxesPanelBinding.MaximaY ); }
+			set { PropertyFactory.SetValue( this, AxesPanelBinding.MaximaY, value ); }
+		}
 
 		/// <summary>
 		///   The minimum size of <see cref="VisibleIntervalX" />.
 		/// </summary>
 		[DependencyProperty( AxesPanelBinding.MinimumSizeX )]
-		public TXSize MinimumSizeX { get; set; }
+		public TXSize MinimumSizeX
+		{
+			get { return (TXSize)PropertyFactory.GetValue( this, AxesPanelBinding.MinimumSizeX ); }
+			set { PropertyFactory.SetValue( this, AxesPanelBinding.MinimumSizeX, value ); }
+		}
 
 		/// <summary>
 		///   The minimum size of <see cref="VisibleIntervalY" />.
 		/// </summary>
 		[DependencyProperty( AxesPanelBinding.MinimumSizeY )]
-		public TYSize MinimumSizeY { get; set; }
+		public TYSize MinimumSizeY
+		{
+			get { return (TYSize)PropertyFactory.GetValue( this, AxesPanelBinding.MinimumSizeY ); }
+			set { PropertyFactory.SetValue( this, AxesPanelBinding.MinimumSizeY, value ); }
+		}
 
 		/// <summary>
 		///   The visible interval along the X-axis.
 		/// </summary>
 		[DependencyProperty( AxesPanelBinding.VisibleIntervalX )]
 		[CoercionHandler( typeof( VisibleIntervalCoercion ), Axis.X )]
-		public Interval<TX, TXSize> VisibleIntervalX { get; set; }
+		public Interval<TX, TXSize> VisibleIntervalX
+		{
+			get { return (Interval<TX, TXSize>)PropertyFactory.GetValue( this, AxesPanelBinding.VisibleIntervalX ); }
+			set { PropertyFactory.SetValue( this, AxesPanelBinding.VisibleIntervalX, value ); }
+		}
 
 		/// <summary>
 		///   The visible interval along the Y-axis.
 		/// </summary>
 		[DependencyProperty( AxesPanelBinding.VisibleIntervalY )]
 		[CoercionHandler( typeof( VisibleIntervalCoercion ), Axis.Y )]
-		public Interval<TY, TYSize> VisibleIntervalY { get; set; }
+		public Interval<TY, TYSize> VisibleIntervalY
+		{
+			get { return (Interval<TY, TYSize>)PropertyFactory.GetValue( this, AxesPanelBinding.VisibleIntervalY ); }
+			set { PropertyFactory.SetValue( this, AxesPanelBinding.VisibleIntervalY, value ); }
+		}
 
 
 		#region Attached properties
@@ -222,13 +256,15 @@ namespace Whathecode.AxesPanels
 				if ( element != null )
 				{
 					// Resize in case size is specified.
-					object sizeX = child.ReadLocalValue( SizeXProperty );
-					object sizeY = child.ReadLocalValue( SizeYProperty );
-					if ( sizeX != DependencyProperty.UnsetValue )
+					ValueSource sizeXSource = DependencyPropertyHelper.GetValueSource( child, SizeXProperty );
+					object sizeX = sizeXSource.BaseValueSource == BaseValueSource.Default ? null : child.ReadLocalValue( SizeXProperty );
+					ValueSource sizeYSource = DependencyPropertyHelper.GetValueSource( child, SizeYProperty );
+					object sizeY = sizeYSource.BaseValueSource == BaseValueSource.Default ? null : child.ReadLocalValue( SizeYProperty );
+					if ( sizeX != null )
 					{
 						element.Width = IntervalSize( VisibleIntervalX, (TXSize)sizeX, availableSize.Width );
 					}
-					if ( sizeY != DependencyProperty.UnsetValue )
+					if ( sizeY != null )
 					{
 						element.Height = IntervalSize( VisibleIntervalY, (TYSize)sizeY, availableSize.Height );
 					}
@@ -263,17 +299,19 @@ namespace Whathecode.AxesPanels
 				}
 
 				// Get positioning information.
-				object x = child.ReadLocalValue( XProperty );
-				object y = child.ReadLocalValue( YProperty );
+				ValueSource xSource = DependencyPropertyHelper.GetValueSource( child, XProperty );
+				object x = xSource.BaseValueSource == BaseValueSource.Default ? null : child.GetValue( XProperty );
+				ValueSource ySource = DependencyPropertyHelper.GetValueSource( child, YProperty );
+				object y = ySource.BaseValueSource == BaseValueSource.Default ? null : child.GetValue( YProperty );
 				AxisAlignment alignmentX = (AxisAlignment)child.GetValue( AlignmentXProperty );
 				AxisAlignment alignmentY = (AxisAlignment)child.GetValue( AlignmentYProperty );
 
 				// Position.
-				if ( x != DependencyProperty.UnsetValue )
+				if ( x != null )
 				{
 					translate.X = PositionInInterval( VisibleIntervalX, finalSize.Width, child.DesiredSize.Width, (TX)x, alignmentX );
 				}
-				if ( y != DependencyProperty.UnsetValue )
+				if ( y != null )
 				{
 					translate.Y = PositionInInterval( VisibleIntervalY, finalSize.Height, child.DesiredSize.Height, (TY)y, alignmentY );
 				}

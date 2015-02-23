@@ -14,6 +14,9 @@ namespace Whathecode.AxesPanels
 		{
 			MaximaX = new Interval<DateTime, TimeSpan>( DateTime.MinValue, DateTime.MaxValue );
 			MaximaY = new Interval<double, double>( double.MinValue, double.MaxValue );
+			DateTime now = DateTime.Now;
+			VisibleIntervalX = new Interval<DateTime, TimeSpan>( now - TimeSpan.FromHours( 12 ), now + TimeSpan.FromHours( 12 ) );
+			VisibleIntervalY = new Interval<double, double>( 0, 100 );
 		}
 
 		static TimePanel()

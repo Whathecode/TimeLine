@@ -49,13 +49,8 @@
     <Reference Include="System.Xaml">
       <RequiredTargetFramework>4.0</RequiredTargetFramework>
     </Reference>
-    <Reference Include="Whathecode.PresentationFramework, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="Whathecode.PresentationFramework">
       <HintPath>..\Libraries\Framework Class Library Extension\Any CPU\Whathecode.PresentationFramework.dll</HintPath>
-    </Reference>
-    <Reference Include="Whathecode.PresentationFramework.Aspects, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Libraries\Framework Class Library Extension\Any CPU\Whathecode.PresentationFramework.Aspects.dll</HintPath>
     </Reference>
     <Reference Include="Whathecode.System, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
