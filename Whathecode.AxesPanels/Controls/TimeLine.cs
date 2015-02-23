@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Threading;
 using Whathecode.System.Arithmetic.Range;
 using Whathecode.System.Windows.DependencyPropertyFactory;
 using Whathecode.System.Windows.DependencyPropertyFactory.Attributes;
@@ -47,7 +46,7 @@ namespace Whathecode.AxesPanels.Controls
 		#endregion // Attached properties.
 
 
-		public TimeLine()
+		static TimeLine()
 		{
 			DefaultStyleKeyProperty.OverrideMetadata( Type, new FrameworkPropertyMetadata( Type ) );
 		}
@@ -63,8 +62,7 @@ namespace Whathecode.AxesPanels.Controls
 			var item = new TimeLineItem();
 			if ( ItemContainerStyle != null )
 			{
-				// Style affects layout. Only set after loaded.
-				Dispatcher.BeginInvoke( new Action( () => item.Style = ItemContainerStyle ), DispatcherPriority.Loaded );
+				item.Style = ItemContainerStyle;
 			}
 			item.SnapsToDevicePixels = SnapsToDevicePixels;
 

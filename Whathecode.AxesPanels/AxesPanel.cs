@@ -35,10 +35,10 @@ namespace Whathecode.AxesPanels
 		// ReSharper restore StaticMemberInGenericType
 
 
-		/// <summary>
+			/// <summary>
 		///   The maximum range within which all values on the X-axis must lie.
 		/// </summary>
-		[DependencyProperty( AxesPanelBinding.MaximaX )]
+		[DependencyProperty( AxesPanelBinding.MaximaX, DefaultValueProvider = typeof( EmptyIntervalProvider ) )]
 		public Interval<TX, TXSize> MaximaX
 		{
 			get { return (Interval<TX, TXSize>)PropertyFactory.GetValue( this, AxesPanelBinding.MaximaX ); }
@@ -48,7 +48,7 @@ namespace Whathecode.AxesPanels
 		/// <summary>
 		///   The maximum range within which all values on the Y-axis must lie.
 		/// </summary>
-		[DependencyProperty( AxesPanelBinding.MaximaY )]
+		[DependencyProperty( AxesPanelBinding.MaximaY, DefaultValueProvider = typeof( EmptyIntervalProvider ) )]
 		public Interval<TY, TYSize> MaximaY
 		{
 			get { return (Interval<TY, TYSize>)PropertyFactory.GetValue( this, AxesPanelBinding.MaximaY ); }
@@ -78,7 +78,7 @@ namespace Whathecode.AxesPanels
 		/// <summary>
 		///   The visible interval along the X-axis.
 		/// </summary>
-		[DependencyProperty( AxesPanelBinding.VisibleIntervalX )]
+		[DependencyProperty( AxesPanelBinding.VisibleIntervalX, DefaultValueProvider = typeof( EmptyIntervalProvider ), AffectsMeasure = true )]
 		[CoercionHandler( typeof( VisibleIntervalCoercion ), Axis.X )]
 		public Interval<TX, TXSize> VisibleIntervalX
 		{
@@ -89,7 +89,7 @@ namespace Whathecode.AxesPanels
 		/// <summary>
 		///   The visible interval along the Y-axis.
 		/// </summary>
-		[DependencyProperty( AxesPanelBinding.VisibleIntervalY )]
+		[DependencyProperty( AxesPanelBinding.VisibleIntervalY, DefaultValueProvider = typeof( EmptyIntervalProvider ), AffectsMeasure = true )]
 		[CoercionHandler( typeof( VisibleIntervalCoercion ), Axis.Y )]
 		public Interval<TY, TYSize> VisibleIntervalY
 		{
@@ -132,7 +132,7 @@ namespace Whathecode.AxesPanels
 		// ReSharper disable once StaticMemberInGenericType
 		public static readonly DependencyProperty AlignmentXProperty = DependencyProperty.RegisterAttached(
 			@"AlignmentX", typeof( AxisAlignment ), Type,
-			new PropertyMetadata( AxisAlignment.AfterValue ) );
+			new FrameworkPropertyMetadata( AxisAlignment.AfterValue ) );
 		public static AxisAlignment GetAlignmentX( FrameworkElement element )
 		{
 			return (AxisAlignment)element.GetValue( AlignmentXProperty );
@@ -148,7 +148,7 @@ namespace Whathecode.AxesPanels
 		// ReSharper disable once StaticMemberInGenericType
 		public static readonly DependencyProperty AlignmentYProperty = DependencyProperty.RegisterAttached(
 			@"AlignmentY", typeof( AxisAlignment ), Type,
-			new PropertyMetadata( AxisAlignment.AfterValue ) );
+			new FrameworkPropertyMetadata( AxisAlignment.AfterValue ) );
 		public static AxisAlignment GetAlignmentY( FrameworkElement element )
 		{
 			return (AxisAlignment)element.GetValue( AlignmentYProperty );
@@ -163,7 +163,8 @@ namespace Whathecode.AxesPanels
 		/// </summary>
 		// ReSharper disable once StaticMemberInGenericType
 		public static readonly DependencyProperty SizeXProperty = DependencyProperty.RegisterAttached(
-			@"SizeX", typeof( TXSize ), Type );
+			@"SizeX", typeof( TXSize ), Type,
+			new FrameworkPropertyMetadata( default( TXSize ), FrameworkPropertyMetadataOptions.AffectsMeasure ) );
 		public static TXSize GetSizeX( FrameworkElement element )
 		{
 			return (TXSize)element.GetValue( SizeXProperty );
@@ -177,7 +178,9 @@ namespace Whathecode.AxesPanels
 		///   Identifies the SizeY property which indicates the desired size of the element along the Y-axis.
 		/// </summary>
 		// ReSharper disable once StaticMemberInGenericType
-		public static readonly DependencyProperty SizeYProperty = DependencyProperty.RegisterAttached( @"SizeY", typeof( TYSize ), Type );
+		public static readonly DependencyProperty SizeYProperty = DependencyProperty.RegisterAttached(
+			@"SizeY", typeof( TYSize ), Type,
+			new FrameworkPropertyMetadata( default( TYSize ), FrameworkPropertyMetadataOptions.AffectsMeasure ) );
 		public static TYSize GetSizeY( FrameworkElement element )
 		{
 			return (TYSize)element.GetValue( SizeYProperty );
@@ -193,7 +196,7 @@ namespace Whathecode.AxesPanels
 		// ReSharper disable once StaticMemberInGenericType
 		public static readonly DependencyProperty IntervalXProperty = DependencyProperty.RegisterAttached(
 			@"IntervalX", typeof( Interval<TX, TXSize> ), Type,
-			new PropertyMetadata( OnIntervalXChanged ) );
+			new FrameworkPropertyMetadata( OnIntervalXChanged ) );
 		static void OnIntervalXChanged( DependencyObject element, DependencyPropertyChangedEventArgs args )
 		{
 			var interval = (Interval<TX, TXSize>)args.NewValue;
@@ -215,7 +218,7 @@ namespace Whathecode.AxesPanels
 		// ReSharper disable once StaticMemberInGenericType
 		public static readonly DependencyProperty IntervalYProperty = DependencyProperty.RegisterAttached(
 			@"IntervalY", typeof( Interval<TY, TYSize> ), Type,
-			new PropertyMetadata( OnIntervalYChanged ) );
+			new FrameworkPropertyMetadata( OnIntervalYChanged ) );
 		static void OnIntervalYChanged( DependencyObject element, DependencyPropertyChangedEventArgs args )
 		{
 			var interval = (Interval<TY, TYSize>)args.NewValue;
@@ -234,15 +237,9 @@ namespace Whathecode.AxesPanels
 		#endregion // Attached properties
 
 
-		protected AxesPanel()
+		static AxesPanel()
 		{
-			var defaultX = default( TX );
-			MaximaX = new Interval<TX, TXSize>( defaultX, defaultX );
-			VisibleIntervalX = new Interval<TX, TXSize>( MaximaX.Start, MaximaX.End );
-
-			var defaultY = default( TY );
-			MaximaY = new Interval<TY, TYSize>( defaultY, defaultY );
-			VisibleIntervalY = new Interval<TY, TYSize>( MaximaY.Start, MaximaY.End );
+			DefaultStyleKeyProperty.OverrideMetadata( Type, new FrameworkPropertyMetadata( Type ) );
 		}
 
 
@@ -257,9 +254,9 @@ namespace Whathecode.AxesPanels
 				{
 					// Resize in case size is specified.
 					ValueSource sizeXSource = DependencyPropertyHelper.GetValueSource( child, SizeXProperty );
-					object sizeX = sizeXSource.BaseValueSource == BaseValueSource.Default ? null : child.ReadLocalValue( SizeXProperty );
+					object sizeX = sizeXSource.BaseValueSource == BaseValueSource.Default ? null : child.GetValue( SizeXProperty );
 					ValueSource sizeYSource = DependencyPropertyHelper.GetValueSource( child, SizeYProperty );
-					object sizeY = sizeYSource.BaseValueSource == BaseValueSource.Default ? null : child.ReadLocalValue( SizeYProperty );
+					object sizeY = sizeYSource.BaseValueSource == BaseValueSource.Default ? null : child.GetValue( SizeYProperty );
 					if ( sizeX != null )
 					{
 						element.Width = IntervalSize( VisibleIntervalX, (TXSize)sizeX, availableSize.Width );

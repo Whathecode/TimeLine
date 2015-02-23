@@ -2,6 +2,7 @@
 using System.Collections.ObjectModel;
 using System.Windows.Controls;
 using Whathecode.AxesPanels.Controls;
+using Whathecode.System.Arithmetic.Range;
 
 
 namespace TimeLineTest

@@ -61,6 +61,7 @@
     <Compile Include="AxisAlignment.cs" />
     <Compile Include="Controls\TimeLine.cs" />
     <Compile Include="Controls\TimeLineItem.cs" />
+    <Compile Include="Internal\EmptyIntervalProvider.cs" />
     <Compile Include="Internal\VisibleIntervalCoercion.cs" />
     <Compile Include="PlanePanel.cs" />
     <Compile Include="TimePanel.cs" />

@@ -1,4 +1,6 @@
-﻿using Whathecode.System.Arithmetic.Range;
+﻿using System;
+using System.Windows;
+using Whathecode.System.Arithmetic.Range;
 
 
 namespace Whathecode.AxesPanels
@@ -8,12 +10,16 @@ namespace Whathecode.AxesPanels
 	/// </summary>
 	public class PlanePanel : AxesPanel<double, double, double, double>
 	{
-		public PlanePanel()
+		static PlanePanel()
 		{
-			MaximaX = new Interval<double, double>( double.MinValue, double.MaxValue );
-			MaximaY = new Interval<double, double>( double.MinValue, double.MaxValue );
-			VisibleIntervalX = new Interval<double, double>( 0, 100 );
-			VisibleIntervalY = new Interval<double, double>( 0, 100 );
+			Type type = typeof( PlanePanel );
+			DefaultStyleKeyProperty.OverrideMetadata( type, new FrameworkPropertyMetadata( type ) );
+
+			// Specify new default values.
+			MaximaXProperty.OverrideMetadata( type, new FrameworkPropertyMetadata( new Interval<double, double>( double.MinValue, double.MaxValue ) ) );
+			MaximaYProperty.OverrideMetadata( type, new FrameworkPropertyMetadata( new Interval<double, double>( double.MinValue, double.MaxValue ) ) );
+			VisibleIntervalXProperty.OverrideMetadata( type, new FrameworkPropertyMetadata( new Interval<double, double>( 0, 100 ) ) );
+			VisibleIntervalYProperty.OverrideMetadata( type, new FrameworkPropertyMetadata( new Interval<double, double>( 0, 100 ) ) );
 		}
 
 
