@@ -4,7 +4,9 @@
 	xmlns:controls="clr-namespace:Whathecode.AxesPanels.Controls"
 	xmlns:axesPanels="clr-namespace:Whathecode.AxesPanels"
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d">
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:converters="clr-namespace:Whathecode.System.Windows.Data;assembly=Whathecode.PresentationFramework"
+	mc:Ignorable="d">
 	
 	<!-- TimeControl -->
 	<Style TargetType="{x:Type controls:TimeControl}">
@@ -102,10 +104,40 @@
 	<Style TargetType="{x:Type controls:TimeIndicator}" BasedOn="{StaticResource {x:Type controls:TimeLineItem}}">
 
 		<Setter Property="axesPanels:TimePanel.SizeY" Value="100" />
+		<Setter Property="axesPanels:TimePanel.AlignmentX" Value="Center" />
+		<Setter Property="Fill" Value="{Binding Foreground, RelativeSource={RelativeSource Self}}" />
 		<Setter Property="Template">
 			<Setter.Value>
-				<ControlTemplate>
-					<Canvas Background="{TemplateBinding Foreground}" Width="3" />
+				<ControlTemplate TargetType="{x:Type controls:TimeIndicator}">
+					<ControlTemplate.Resources>
+						<converters:SingleStringFormatConverter x:Key="StringFormat" />
+					</ControlTemplate.Resources>
+					<Canvas Background="{TemplateBinding Background}">
+						<Path
+							Fill="{TemplateBinding Fill}"
+							Stroke="{TemplateBinding Stroke}"
+							StrokeThickness="{TemplateBinding StrokeThickness}">
+							<Path.LayoutTransform>
+								<ScaleTransform ScaleY="-1" />
+							</Path.LayoutTransform>
+							<Path.Data>
+								<CombinedGeometry
+									Geometry1="M-7.5,0 L7.5,0 L0,13Z"
+									GeometryCombineMode="Union">
+									<CombinedGeometry.Geometry2>
+										<RectangleGeometry>
+											<RectangleGeometry.Rect>
+												<Binding
+													Path="ActualHeight" RelativeSource="{RelativeSource TemplatedParent}"
+													Converter="{StaticResource StringFormat}" ConverterParameter="-1.5,0 3 {0}">
+												</Binding>
+											</RectangleGeometry.Rect>
+										</RectangleGeometry>
+									</CombinedGeometry.Geometry2>
+								</CombinedGeometry>
+							</Path.Data>
+						</Path>
+					</Canvas>
 				</ControlTemplate>
 			</Setter.Value>
 		</Setter>
