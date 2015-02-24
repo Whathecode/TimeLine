@@ -7,7 +7,6 @@
 	DataContext="{Binding RelativeSource={RelativeSource Self}}">
 	
 	<controls:TimeLine
-		Background="DodgerBlue"
 		VisibleInterval="[Feb 22 2015, Feb 24 2015]"
 		ItemsSource="{Binding Items}">
 		

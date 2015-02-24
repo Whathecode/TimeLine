@@ -21,8 +21,9 @@ namespace TimeLineTest
 
 			InitializeComponent();
 
-			Label test = new Label { Content = "Occurance is working!" };
-			test.SetValue( TimeLine.OccuranceProperty, new DateTime( 2015, 2, 23 ) );
+			TimeControlItem test = new TimeControlItem();
+			test.Content = new Label { Content = "Occurance is working!" };
+			test.Occurance = new DateTime( 2015, 2, 23 );
 			Items.Add( test );
 		}
 	}

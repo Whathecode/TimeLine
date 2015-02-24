@@ -1,49 +1,18 @@
 ﻿using System;
+using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Controls;
-using Whathecode.System.Arithmetic.Range;
-using Whathecode.System.Windows.DependencyPropertyFactory;
-using Whathecode.System.Windows.DependencyPropertyFactory.Attributes;
 
 
 namespace Whathecode.AxesPanels.Controls
 {
-	public class TimeLine : ItemsControl
+	[TemplatePart( Name = LabelsPart, Type = typeof( ItemsControl ) )]
+	public class TimeLine : TimeControl
 	{
-		public enum TimeLineBinding
-		{
-			VisibleInterval
-		}
-
-
+		const string LabelsPart = "PART_Labels";
 		static readonly Type Type = typeof( TimeLine );
-		public static DependencyPropertyFactory<TimeLineBinding> PropertyFactory = new DependencyPropertyFactory<TimeLineBinding>();
-		public static DependencyProperty VisibleIntervalProperty = PropertyFactory[ TimeLineBinding.VisibleInterval ];
 
-		[DependencyProperty( TimeLineBinding.VisibleInterval )]
-		public Interval<DateTime, TimeSpan> VisibleInterval
-		{
-			get { return (Interval<DateTime, TimeSpan>)PropertyFactory.GetValue( this, TimeLineBinding.VisibleInterval ); }
-			set { PropertyFactory.SetValue( this, TimeLineBinding.VisibleInterval, value ); }
-		}
-
-
-		#region Attached properties
-
-		/// <summary>
-		///   Identifies the Occurance property which indicates where the element should be positioned in time.
-		/// </summary>
-		public static readonly DependencyProperty OccuranceProperty = DependencyProperty.RegisterAttached( @"Occurance", typeof( DateTime ), Type );
-		public static DateTime GetOccurance( FrameworkElement element )
-		{
-			return (DateTime)element.GetValue( OccuranceProperty );
-		}
-		public static void SetOccurance( FrameworkElement element, DateTime value )
-		{
-			element.SetValue( OccuranceProperty, value );
-		}
-
-		#endregion // Attached properties.
+		readonly ObservableCollection<object> _labels = new ObservableCollection<object>(); 
 
 
 		static TimeLine()
@@ -52,21 +21,19 @@ namespace Whathecode.AxesPanels.Controls
 		}
 
 
-		protected override bool IsItemItsOwnContainerOverride( object item )
+		public override void OnApplyTemplate()
 		{
-			return item is TimeLineItem;
-		}
+			base.OnApplyTemplate();
 
-		protected override DependencyObject GetContainerForItemOverride()
-		{
-			var item = new TimeLineItem();
-			if ( ItemContainerStyle != null )
+			// Add labels to the labels panel.
+			var labels = GetTemplateChild( LabelsPart ) as Panel;
+			if ( labels != null )
 			{
-				item.Style = ItemContainerStyle;
+				var now = new TimeIndicator();
+				now.Occurance = new DateTime( 2015, 2, 23 );
+				_labels.Add( now );
+				labels.Children.Add( now );
 			}
-			item.SnapsToDevicePixels = SnapsToDevicePixels;
-
-			return item;
 		}
 	}
 }

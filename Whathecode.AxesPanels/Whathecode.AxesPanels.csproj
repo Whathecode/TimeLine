@@ -59,6 +59,9 @@
     <Compile Include="AxesPanelBinding.cs" />
     <Compile Include="Axis.cs" />
     <Compile Include="AxisAlignment.cs" />
+    <Compile Include="Controls\TimeControl.cs" />
+    <Compile Include="Controls\TimeControlItem.cs" />
+    <Compile Include="Controls\TimeIndicator.cs" />
     <Compile Include="Controls\TimeLine.cs" />
     <Compile Include="Controls\TimeLineItem.cs" />
     <Compile Include="Internal\EmptyIntervalProvider.cs" />
