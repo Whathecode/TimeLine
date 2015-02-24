@@ -103,7 +103,9 @@ namespace Whathecode.AxesPanels
 		/// <summary>
 		///   Identifies the X property which indicates where the element should be positioned on the X-axis.
 		/// </summary>
-		public static readonly DependencyProperty XProperty = DependencyProperty.RegisterAttached( @"X", typeof( TX ), Type );
+		public static readonly DependencyProperty XProperty = DependencyProperty.RegisterAttached(
+			@"X", typeof( TX ), Type,
+			new FrameworkPropertyMetadata( default( TX ), FrameworkPropertyMetadataOptions.AffectsParentArrange ) );
 		public static TX GetX( FrameworkElement element )
 		{
 			return (TX)element.GetValue( XProperty );
@@ -116,7 +118,9 @@ namespace Whathecode.AxesPanels
 		/// <summary>
 		///   Identifies the Y property which indicates where the element should be positioned on the Y-axis.
 		/// </summary>
-		public static readonly DependencyProperty YProperty = DependencyProperty.RegisterAttached( @"Y", typeof( TY ), Type );
+		public static readonly DependencyProperty YProperty = DependencyProperty.RegisterAttached(
+			@"Y", typeof( TY ), Type,
+			new FrameworkPropertyMetadata( default( TY ), FrameworkPropertyMetadataOptions.AffectsParentArrange ) );
 		public static TY GetY( FrameworkElement element )
 		{
 			return (TY)element.GetValue( YProperty );
@@ -132,7 +136,7 @@ namespace Whathecode.AxesPanels
 		// ReSharper disable once StaticMemberInGenericType
 		public static readonly DependencyProperty AlignmentXProperty = DependencyProperty.RegisterAttached(
 			@"AlignmentX", typeof( AxisAlignment ), Type,
-			new FrameworkPropertyMetadata( AxisAlignment.AfterValue ) );
+			new FrameworkPropertyMetadata( AxisAlignment.AfterValue, FrameworkPropertyMetadataOptions.AffectsParentArrange ) );
 		public static AxisAlignment GetAlignmentX( FrameworkElement element )
 		{
 			return (AxisAlignment)element.GetValue( AlignmentXProperty );
@@ -148,7 +152,7 @@ namespace Whathecode.AxesPanels
 		// ReSharper disable once StaticMemberInGenericType
 		public static readonly DependencyProperty AlignmentYProperty = DependencyProperty.RegisterAttached(
 			@"AlignmentY", typeof( AxisAlignment ), Type,
-			new FrameworkPropertyMetadata( AxisAlignment.AfterValue ) );
+			new FrameworkPropertyMetadata( AxisAlignment.AfterValue, FrameworkPropertyMetadataOptions.AffectsParentArrange ) );
 		public static AxisAlignment GetAlignmentY( FrameworkElement element )
 		{
 			return (AxisAlignment)element.GetValue( AlignmentYProperty );
@@ -164,7 +168,7 @@ namespace Whathecode.AxesPanels
 		// ReSharper disable once StaticMemberInGenericType
 		public static readonly DependencyProperty SizeXProperty = DependencyProperty.RegisterAttached(
 			@"SizeX", typeof( TXSize ), Type,
-			new FrameworkPropertyMetadata( default( TXSize ), FrameworkPropertyMetadataOptions.AffectsMeasure ) );
+			new FrameworkPropertyMetadata( default( TXSize ), FrameworkPropertyMetadataOptions.AffectsParentMeasure ) );
 		public static TXSize GetSizeX( FrameworkElement element )
 		{
 			return (TXSize)element.GetValue( SizeXProperty );
@@ -180,7 +184,7 @@ namespace Whathecode.AxesPanels
 		// ReSharper disable once StaticMemberInGenericType
 		public static readonly DependencyProperty SizeYProperty = DependencyProperty.RegisterAttached(
 			@"SizeY", typeof( TYSize ), Type,
-			new FrameworkPropertyMetadata( default( TYSize ), FrameworkPropertyMetadataOptions.AffectsMeasure ) );
+			new FrameworkPropertyMetadata( default( TYSize ), FrameworkPropertyMetadataOptions.AffectsParentMeasure ) );
 		public static TYSize GetSizeY( FrameworkElement element )
 		{
 			return (TYSize)element.GetValue( SizeYProperty );

@@ -10,21 +10,37 @@ namespace Whathecode.AxesPanels.Controls
 {
 	public class TimeControl : ItemsControl
 	{
-		public enum TimeControlBinding
+		public enum Properties
 		{
 			VisibleInterval
 		}
 
+		class DefaultProvider : IDefaultValueProvider<Properties>
+		{
+			public object GetDefaultValue( Properties property, Type propertyType )
+			{
+				switch ( property )
+				{
+					case Properties.VisibleInterval:
+						DateTime now = DateTime.Now;
+						TimeSpan span = TimeSpan.FromHours( 12 );
+						return new Interval<DateTime, TimeSpan>( now - span, now + span );
+					default:
+						return null;
+				}
+			}
+		}
+
 
 		static readonly Type Type = typeof( TimeControl );
-		public static DependencyPropertyFactory<TimeControlBinding> PropertyFactory = new DependencyPropertyFactory<TimeControlBinding>();
-		public static DependencyProperty VisibleIntervalProperty = PropertyFactory[ TimeControlBinding.VisibleInterval ];
+		public static DependencyPropertyFactory<Properties> PropertyFactory = new DependencyPropertyFactory<Properties>();
+		public static DependencyProperty VisibleIntervalProperty = PropertyFactory[ Properties.VisibleInterval ];
 
-		[DependencyProperty( TimeControlBinding.VisibleInterval )]
+		[DependencyProperty( Properties.VisibleInterval, DefaultValueProvider = typeof( DefaultProvider ) )]
 		public Interval<DateTime, TimeSpan> VisibleInterval
 		{
-			get { return (Interval<DateTime, TimeSpan>)PropertyFactory.GetValue( this, TimeControlBinding.VisibleInterval ); }
-			set { PropertyFactory.SetValue( this, TimeControlBinding.VisibleInterval, value ); }
+			get { return (Interval<DateTime, TimeSpan>)PropertyFactory.GetValue( this, Properties.VisibleInterval ); }
+			set { PropertyFactory.SetValue( this, Properties.VisibleInterval, value ); }
 		}
 
 

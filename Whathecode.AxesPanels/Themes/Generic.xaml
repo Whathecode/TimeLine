@@ -103,6 +103,7 @@
 	<!-- TimeIndicator -->
 	<Style TargetType="{x:Type controls:TimeIndicator}" BasedOn="{StaticResource {x:Type controls:TimeLineItem}}">
 
+		<Setter Property="Occurance" Value="{Binding CurrentTime, RelativeSource={RelativeSource AncestorType=controls:TimeLine}}" />
 		<Setter Property="axesPanels:TimePanel.SizeY" Value="100" />
 		<Setter Property="axesPanels:TimePanel.AlignmentX" Value="Center" />
 		<Setter Property="Fill" Value="{Binding Foreground, RelativeSource={RelativeSource Self}}" />
