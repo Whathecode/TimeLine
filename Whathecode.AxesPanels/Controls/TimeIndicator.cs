@@ -3,7 +3,7 @@
 
 namespace Whathecode.AxesPanels.Controls
 {
-	public class TimeIndicator : TimeLineLabel
+	public class TimeIndicator : TimeLineItem
 	{
 		static TimeIndicator()
 		{

@@ -21,6 +21,7 @@
 		<controls:TimeLine
 			ItemsSource="{Binding Items}"
 			CurrentTime="{Binding CurrentTime}"
+			VisibleInterval="{Binding VisibleInterval}"
 			ClipToBounds="True">
 		
 			<controls:TimeLine.Resources>
@@ -35,6 +36,9 @@
 							</LinearGradientBrush>
 						</Setter.Value>
 					</Setter>
+				</Style>
+				<Style TargetType="controls:TimeLineLabel">
+					<Setter Property="Stroke" Value="White" />
 				</Style>
 			</controls:TimeLine.Resources>
 		

@@ -68,10 +68,9 @@
 			<Setter.Value>
 				<controls:TimeLineLabelFactories>
 					<controls:TimeLineLabelCollection>
-						<controls:TimeLineLabelCollection.Labels>
-							<controls:TimeIndicator />
-						</controls:TimeLineLabelCollection.Labels>
+						<controls:TimeIndicator />
 					</controls:TimeLineLabelCollection>
+					<controls:TimeIntervalLabelFactory StepSize="00:15:00" />
 				</controls:TimeLineLabelFactories>
 			</Setter.Value>
 		</Setter>
@@ -101,53 +100,76 @@
 		
 	</Style>
 	
-	<!-- TimeLineLabel -->
-	<Style TargetType="{x:Type controls:TimeLineLabel}">
+	<!-- TimeLineItem -->
+	<Style TargetType="{x:Type controls:TimeLineItem}">
 
 		<Setter Property="DataContext" Value="{Binding RelativeSource={RelativeSource Self}}" />
 		<Setter Property="axesPanels:TimePanel.X" Value="{Binding Occurance}" />
+		<Setter Property="IsHitTestVisible" Value="False" />
+		<Setter Property="axesPanels:TimePanel.SizeY" Value="100" />
+		<Setter Property="Fill" Value="{Binding Foreground, RelativeSource={RelativeSource Self}}" />
+		<Setter Property="Stroke" Value="{Binding Foreground, RelativeSource={RelativeSource Self}}" />
 
 	</Style>
 	
 	<!-- TimeIndicator -->
-	<Style TargetType="{x:Type controls:TimeIndicator}" BasedOn="{StaticResource {x:Type controls:TimeLineLabel}}">
+	<Style TargetType="{x:Type controls:TimeIndicator}" BasedOn="{StaticResource {x:Type controls:TimeLineItem}}">
 
 		<Setter Property="Occurance" Value="{Binding CurrentTime, RelativeSource={RelativeSource AncestorType=controls:TimeLine}}" />
-		<Setter Property="axesPanels:TimePanel.SizeY" Value="100" />
 		<Setter Property="axesPanels:TimePanel.AlignmentX" Value="Center" />
-		<Setter Property="Fill" Value="{Binding Foreground, RelativeSource={RelativeSource Self}}" />
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="{x:Type controls:TimeIndicator}">
 					<ControlTemplate.Resources>
 						<converters:SingleStringFormatConverter x:Key="StringFormat" />
 					</ControlTemplate.Resources>
-					<Canvas Background="{TemplateBinding Background}">
-						<Path
-							Fill="{TemplateBinding Fill}"
-							Stroke="{TemplateBinding Stroke}"
-							StrokeThickness="{TemplateBinding StrokeThickness}">
-							<Path.LayoutTransform>
-								<ScaleTransform ScaleY="-1" />
-							</Path.LayoutTransform>
-							<Path.Data>
-								<CombinedGeometry
-									Geometry1="M-7.5,0 L7.5,0 L0,13Z"
-									GeometryCombineMode="Union">
-									<CombinedGeometry.Geometry2>
-										<RectangleGeometry>
-											<RectangleGeometry.Rect>
-												<Binding
-													Path="ActualHeight" RelativeSource="{RelativeSource TemplatedParent}"
-													Converter="{StaticResource StringFormat}" ConverterParameter="-1.5,0 3 {0}">
-												</Binding>
-											</RectangleGeometry.Rect>
-										</RectangleGeometry>
-									</CombinedGeometry.Geometry2>
-								</CombinedGeometry>
-							</Path.Data>
-						</Path>
-					</Canvas>
+					<Path
+						Fill="{TemplateBinding Fill}"
+						Stroke="{TemplateBinding Stroke}"
+						StrokeThickness="{TemplateBinding StrokeThickness}">
+						<Path.LayoutTransform>
+							<ScaleTransform ScaleY="-1" />
+						</Path.LayoutTransform>
+						<Path.Data>
+							<CombinedGeometry
+								Geometry1="M-7.5,0 L7.5,0 L0,13Z"
+								GeometryCombineMode="Union">
+								<CombinedGeometry.Geometry2>
+									<RectangleGeometry>
+										<RectangleGeometry.Rect>
+											<Binding
+												Path="ActualHeight" RelativeSource="{RelativeSource TemplatedParent}"
+												Converter="{StaticResource StringFormat}" ConverterParameter="-1.5,0 3 {0}">
+											</Binding>
+										</RectangleGeometry.Rect>
+									</RectangleGeometry>
+								</CombinedGeometry.Geometry2>
+							</CombinedGeometry>
+						</Path.Data>
+					</Path>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+
+	</Style>
+	
+	<!-- TimeLineLabel -->
+	<Style TargetType="{x:Type controls:TimeLineLabel}" BasedOn="{StaticResource {x:Type controls:TimeLineItem}}">
+
+		<Setter Property="StrokeThickness" Value="1" />
+		<Setter Property="axesPanels:TimePanel.AlignmentX" Value="Center" />
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="{x:Type controls:TimeLineLabel}">
+					<Line
+						Fill="{TemplateBinding Fill}"
+						Stroke="{TemplateBinding Stroke}"
+						StrokeThickness="{TemplateBinding StrokeThickness}"
+						Y2="300">
+						<Line.LayoutTransform>
+							<ScaleTransform ScaleY="-1" />
+						</Line.LayoutTransform>
+					</Line>
 				</ControlTemplate>
 			</Setter.Value>
 		</Setter>

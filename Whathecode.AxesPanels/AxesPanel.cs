@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Linq;
 using System.Windows;
@@ -374,11 +373,11 @@ namespace Whathecode.AxesPanels
 			if ( oldCollection != null )
 			{
 				oldCollection.CollectionChanged -= panel.OnLabelFactoriesChanged;
-				oldCollection.SelectMany( f => f.Labels ).ForEach( l => panel.Children.Remove( l ) );
+				oldCollection.SelectMany( f => f.Select( l => l ) ).ForEach( l => panel.Children.Remove( l ) );
 			}
 			newCollection.CollectionChanged += panel.OnLabelFactoriesChanged;
 			panel.UpdateLabelFactories();
-			newCollection.SelectMany( f => f.Labels ).ForEach( l => panel.Children.Add( l ) );
+			newCollection.SelectMany( f => f.Select( l => l ) ).ForEach( l => panel.Children.Add( l ) );
 		}
 		void OnLabelFactoriesChanged( object sender, NotifyCollectionChangedEventArgs e )
 		{
@@ -387,16 +386,16 @@ namespace Whathecode.AxesPanels
 				case NotifyCollectionChangedAction.Add:
 					e.NewItems.Cast<AbstractAxesLabelFactory<TX, TXSize, TY, TYSize>>().ForEach( f =>
 					{
-						f.Labels.CollectionChanged += OnLabelsChanged;
-						f.VisibleIntervalChanged( VisibleIntervalX, VisibleIntervalY );
-						f.Labels.ForEach( l => Children.Add( l ) );
+						f.CollectionChanged += OnLabelsChanged;
+						f.VisibleIntervalChanged( new AxesIntervals<TX, TXSize, TY, TYSize>( VisibleIntervalX, VisibleIntervalY ) );
+						f.ForEach( l => Children.Add( l ) );
 					} );
 					break;
 				case NotifyCollectionChangedAction.Remove:
 					e.OldItems.Cast<AbstractAxesLabelFactory<TX, TXSize, TY, TYSize>>().ForEach( f =>
 					{
-						f.Labels.CollectionChanged -= OnLabelsChanged;
-						f.Labels.ForEach( l => Children.Remove( l ) );
+						f.CollectionChanged -= OnLabelsChanged;
+						f.ForEach( l => Children.Remove( l ) );
 					} );
 					break;
 			}
@@ -430,7 +429,7 @@ namespace Whathecode.AxesPanels
 		{
 			if ( LabelFactories != null )
 			{
-				LabelFactories.ForEach( f => f.VisibleIntervalChanged( VisibleIntervalX, VisibleIntervalY ) );
+				LabelFactories.ForEach( f => f.VisibleIntervalChanged( new AxesIntervals<TX, TXSize, TY, TYSize>( VisibleIntervalX, VisibleIntervalY ) ) );
 			}
 		}
 

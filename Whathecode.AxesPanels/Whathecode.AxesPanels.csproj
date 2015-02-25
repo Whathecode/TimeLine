@@ -53,19 +53,24 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AbstractAxesLabelCollection.cs" />
     <Compile Include="AbstractAxesLabelFactory.cs" />
+    <Compile Include="AbstractXAxisLabelFactory.cs" />
+    <Compile Include="AxesIntervals.cs" />
     <Compile Include="AxesPanel.cs" />
     <Compile Include="AxesPanelBinding.cs" />
     <Compile Include="Axis.cs" />
     <Compile Include="AxisAlignment.cs" />
     <Compile Include="AxesLabelFactories.cs" />
+    <Compile Include="Controls\TimeIntervalLabelFactory.cs" />
+    <Compile Include="Controls\TimeLineLabel.cs" />
     <Compile Include="Controls\TimeLineLabelCollection.cs" />
     <Compile Include="Controls\TimeLineLabelFactories.cs" />
     <Compile Include="Controls\TimeControl.cs" />
     <Compile Include="Controls\TimeControlItem.cs" />
     <Compile Include="Controls\TimeIndicator.cs" />
     <Compile Include="Controls\TimeLine.cs" />
-    <Compile Include="Controls\TimeLineLabel.cs" />
+    <Compile Include="Controls\TimeLineItem.cs" />
     <Compile Include="Internal\EmptyIntervalProvider.cs" />
     <Compile Include="Internal\VisibleIntervalCoercion.cs" />
     <Compile Include="PlanePanel.cs" />

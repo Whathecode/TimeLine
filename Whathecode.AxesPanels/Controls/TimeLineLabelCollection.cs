@@ -1,12 +1,11 @@
 ﻿using System;
-using Whathecode.System.Arithmetic.Range;
 
 
 namespace Whathecode.AxesPanels.Controls
 {
-	public class TimeLineLabelCollection : AbstractAxesLabelFactory<DateTime, TimeSpan, double, double>
+	public class TimeLineLabelCollection : AbstractAxesLabelCollection<DateTime, TimeSpan, double, double>
 	{
-		public override void VisibleIntervalChanged( Interval<DateTime, TimeSpan> intervalX, Interval<double, double> intervalY )
+		internal override void VisibleIntervalChanged( AxesIntervals<DateTime, TimeSpan, double, double> visible )
 		{
 			// Nothing to do.
 		}

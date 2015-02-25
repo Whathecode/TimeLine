@@ -6,6 +6,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using Whathecode.AxesPanels.Controls;
+using Whathecode.System.Arithmetic.Range;
 using Whathecode.System.ComponentModel.NotifyPropertyFactory;
 using Whathecode.System.ComponentModel.NotifyPropertyFactory.Attributes;
 
@@ -20,7 +21,8 @@ namespace TimeLineTest
 		enum Properties
 		{
 			Items,
-			CurrentTime
+			CurrentTime,
+			VisibleInterval
 		}
 
 		public event PropertyChangedEventHandler PropertyChanged;
@@ -40,15 +42,28 @@ namespace TimeLineTest
 			set { _properties.SetValue( Properties.CurrentTime, value ); }
 		}
 
+		[NotifyProperty( Properties.VisibleInterval )]
+		public Interval<DateTime, TimeSpan> VisibleInterval
+		{
+			get { return (Interval<DateTime, TimeSpan>)_properties.GetValue( Properties.VisibleInterval ); }
+			set { _properties.SetValue( Properties.VisibleInterval, value ); }
+		}
+
 
 		public MainWindow()
 		{
 			_properties = new NotifyPropertyFactory<Properties>( this, () => PropertyChanged );
 			Items = new ObservableCollection<object>();
 			CurrentTime = DateTime.Now;
+			TimeSpan zoom = TimeSpan.FromHours( 2 );
+			VisibleInterval = new TimeInterval( CurrentTime - zoom, CurrentTime + zoom );
 
 			Timer update = new Timer( 100 );
-			update.Elapsed += ( sender, args ) => CurrentTime = DateTime.Now;
+			update.Elapsed += ( sender, args ) =>
+			{
+				CurrentTime = DateTime.Now;
+				VisibleInterval = VisibleInterval.Move( TimeSpan.FromSeconds( 10 ) );
+			};
 			update.Start();
 
 			InitializeComponent();
