@@ -8,7 +8,7 @@ using Whathecode.System.Windows.DependencyPropertyFactory.Attributes;
 
 namespace Whathecode.AxesPanels.Controls
 {
-	public class TimeLineItem : Control
+	public class TimeLineLabel : Control
 	{
 		public enum Properties
 		{
@@ -19,7 +19,7 @@ namespace Whathecode.AxesPanels.Controls
 		}
 
 
-		static readonly Type Type = typeof( TimeLineItem );
+		static readonly Type Type = typeof( TimeLineLabel );
 		public static readonly DependencyPropertyFactory<Properties> PropertyFactory = new DependencyPropertyFactory<Properties>();
 		public static readonly DependencyProperty OccuranceProperty = PropertyFactory[ Properties.Occurance ];
 		public static readonly DependencyProperty FillProperty = PropertyFactory[ Properties.Fill ];
@@ -55,7 +55,7 @@ namespace Whathecode.AxesPanels.Controls
 		}
 
 
-		static TimeLineItem()
+		static TimeLineLabel()
 		{
 			DefaultStyleKeyProperty.OverrideMetadata( Type, new FrameworkPropertyMetadata( Type ) );
 		}

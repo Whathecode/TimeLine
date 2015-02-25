@@ -64,6 +64,17 @@
 	<!-- TimeLine -->
 	<Style TargetType="{x:Type controls:TimeLine}" BasedOn="{StaticResource {x:Type controls:TimeControl}}">
 		
+		<Setter Property="LabelFactories">
+			<Setter.Value>
+				<controls:TimeLineLabelFactories>
+					<controls:TimeLineLabelCollection>
+						<controls:TimeLineLabelCollection.Labels>
+							<controls:TimeIndicator />
+						</controls:TimeLineLabelCollection.Labels>
+					</controls:TimeLineLabelCollection>
+				</controls:TimeLineLabelFactories>
+			</Setter.Value>
+		</Setter>
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="{x:Type controls:TimeLine}">
@@ -73,7 +84,7 @@
 						<Border
 							BorderThickness="{TemplateBinding BorderThickness}">
 							<axesPanels:TimePanel
-								x:Name="PART_Labels"
+								LabelFactories="{TemplateBinding LabelFactories}"
 								VisibleIntervalX="{TemplateBinding VisibleInterval}" />
 						</Border>
 						<!-- ItemsSource elements -->
@@ -81,9 +92,7 @@
 							Padding="{TemplateBinding Padding}"
 							BorderBrush="{TemplateBinding BorderBrush}"
 							BorderThickness="{TemplateBinding BorderThickness}">
-							<axesPanels:TimePanel
-								VisibleIntervalX="{TemplateBinding VisibleInterval}"
-								IsItemsHost="True" />
+							<ItemsPresenter />
 						</Border>
 					</Grid>
 				</ControlTemplate>
@@ -92,8 +101,8 @@
 		
 	</Style>
 	
-	<!-- TimeLineItem -->
-	<Style TargetType="{x:Type controls:TimeLineItem}">
+	<!-- TimeLineLabel -->
+	<Style TargetType="{x:Type controls:TimeLineLabel}">
 
 		<Setter Property="DataContext" Value="{Binding RelativeSource={RelativeSource Self}}" />
 		<Setter Property="axesPanels:TimePanel.X" Value="{Binding Occurance}" />
@@ -101,7 +110,7 @@
 	</Style>
 	
 	<!-- TimeIndicator -->
-	<Style TargetType="{x:Type controls:TimeIndicator}" BasedOn="{StaticResource {x:Type controls:TimeLineItem}}">
+	<Style TargetType="{x:Type controls:TimeIndicator}" BasedOn="{StaticResource {x:Type controls:TimeLineLabel}}">
 
 		<Setter Property="Occurance" Value="{Binding CurrentTime, RelativeSource={RelativeSource AncestorType=controls:TimeLine}}" />
 		<Setter Property="axesPanels:TimePanel.SizeY" Value="100" />

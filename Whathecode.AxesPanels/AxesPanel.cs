@@ -1,9 +1,13 @@
 ﻿using System;
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using Whathecode.AxesPanels.Internal;
 using Whathecode.System.Arithmetic.Range;
+using Whathecode.System.Extensions;
 using Whathecode.System.Windows.DependencyPropertyFactory;
 using Whathecode.System.Windows.DependencyPropertyFactory.Attributes;
 using Whathecode.System.Windows.DependencyPropertyFactory.Attributes.Coercion;
@@ -32,6 +36,7 @@ namespace Whathecode.AxesPanels
 		public static readonly DependencyProperty MinimumSizeYProperty = PropertyFactory[ AxesPanelBinding.MinimumSizeY ];
 		public static readonly DependencyProperty VisibleIntervalXProperty = PropertyFactory[ AxesPanelBinding.VisibleIntervalX ];
 		public static readonly DependencyProperty VisibleIntervalYProperty = PropertyFactory[ AxesPanelBinding.VisibleIntervalY ];
+		public static readonly DependencyProperty LabelFactoriesProperty = PropertyFactory[ AxesPanelBinding.LabelFactories ];
 		// ReSharper restore StaticMemberInGenericType
 
 
@@ -95,6 +100,13 @@ namespace Whathecode.AxesPanels
 		{
 			get { return (Interval<TY, TYSize>)PropertyFactory.GetValue( this, AxesPanelBinding.VisibleIntervalY ); }
 			set { PropertyFactory.SetValue( this, AxesPanelBinding.VisibleIntervalY, value ); }
+		}
+
+		[DependencyProperty( AxesPanelBinding.LabelFactories )]
+		public AxesLabelFactories<TX, TXSize, TY, TYSize> LabelFactories
+		{
+			get { return (AxesLabelFactories<TX, TXSize, TY, TYSize>)PropertyFactory.GetValue( this, AxesPanelBinding.LabelFactories ); }
+			set {  PropertyFactory.SetValue( this, AxesPanelBinding.LabelFactories, value ); }
 		}
 
 
@@ -286,6 +298,7 @@ namespace Whathecode.AxesPanels
 			// The idea behind this panel is to display the specified plane area in the available size.
 			return availableSize;
 		}
+
 		protected override Size ArrangeOverride( Size finalSize )
 		{
 			// Position children.
@@ -348,6 +361,76 @@ namespace Whathecode.AxesPanels
 					return interval.IsReversed ? position : position - elementSize;
 				default:
 					throw new NotSupportedException( alignment + " is not supported by the AxesPanel." );
+			}
+		}
+
+		[DependencyPropertyChanged( AxesPanelBinding.LabelFactories )]
+		static void OnLabelFactoriesChanged( DependencyObject dependencyObject, DependencyPropertyChangedEventArgs args )
+		{
+			var panel = (AxesPanel<TX, TXSize, TY, TYSize>)dependencyObject;
+			var oldCollection = (AxesLabelFactories<TX, TXSize, TY, TYSize>)args.OldValue;
+			var newCollection = (AxesLabelFactories<TX, TXSize, TY, TYSize>)args.NewValue;
+
+			if ( oldCollection != null )
+			{
+				oldCollection.CollectionChanged -= panel.OnLabelFactoriesChanged;
+				oldCollection.SelectMany( f => f.Labels ).ForEach( l => panel.Children.Remove( l ) );
+			}
+			newCollection.CollectionChanged += panel.OnLabelFactoriesChanged;
+			panel.UpdateLabelFactories();
+			newCollection.SelectMany( f => f.Labels ).ForEach( l => panel.Children.Add( l ) );
+		}
+		void OnLabelFactoriesChanged( object sender, NotifyCollectionChangedEventArgs e )
+		{
+			switch ( e.Action )
+			{
+				case NotifyCollectionChangedAction.Add:
+					e.NewItems.Cast<AbstractAxesLabelFactory<TX, TXSize, TY, TYSize>>().ForEach( f =>
+					{
+						f.Labels.CollectionChanged += OnLabelsChanged;
+						f.VisibleIntervalChanged( VisibleIntervalX, VisibleIntervalY );
+						f.Labels.ForEach( l => Children.Add( l ) );
+					} );
+					break;
+				case NotifyCollectionChangedAction.Remove:
+					e.OldItems.Cast<AbstractAxesLabelFactory<TX, TXSize, TY, TYSize>>().ForEach( f =>
+					{
+						f.Labels.CollectionChanged -= OnLabelsChanged;
+						f.Labels.ForEach( l => Children.Remove( l ) );
+					} );
+					break;
+			}
+		}
+		void OnLabelsChanged( object sender, NotifyCollectionChangedEventArgs e )
+		{
+			switch ( e.Action )
+			{
+				case NotifyCollectionChangedAction.Add:
+					e.NewItems.Cast<FrameworkElement>().ForEach( l => Children.Add( l ) );
+					break;
+				case NotifyCollectionChangedAction.Remove:
+					e.OldItems.Cast<FrameworkElement>().ForEach( l => Children.Remove( l ) );
+					break;
+			}
+		}
+
+		[DependencyPropertyChanged( AxesPanelBinding.VisibleIntervalX )]
+		static void OnVisibleIntervalXChanged( DependencyObject dependencyObject, DependencyPropertyChangedEventArgs args )
+		{
+			var panel = (AxesPanel<TX, TXSize, TY, TYSize>)dependencyObject;
+			panel.UpdateLabelFactories();
+		}
+		[DependencyPropertyChanged( AxesPanelBinding.VisibleIntervalY )]
+		static void OnVisibleIntervalYChanged( DependencyObject dependencyObject, DependencyPropertyChangedEventArgs args )
+		{	
+			var panel = (AxesPanel<TX, TXSize, TY, TYSize>)dependencyObject;
+			panel.UpdateLabelFactories();
+		}
+		void UpdateLabelFactories()
+		{
+			if ( LabelFactories != null )
+			{
+				LabelFactories.ForEach( f => f.VisibleIntervalChanged( VisibleIntervalX, VisibleIntervalY ) );
 			}
 		}
 

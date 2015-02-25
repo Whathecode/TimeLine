@@ -11,6 +11,7 @@ namespace Whathecode.AxesPanels
 		MinimumSizeX = 1 << 2,
 		MinimumSizeY = 1 << 3,
 		VisibleIntervalX = 1 << 4,
-		VisibleIntervalY = 1 << 5
+		VisibleIntervalY = 1 << 5,
+		LabelFactories = 1 << 6
 	}
 }

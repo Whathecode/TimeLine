@@ -12,8 +12,10 @@ namespace Whathecode.AxesPanels.Controls
 	{
 		public enum Properties
 		{
-			VisibleInterval
+			VisibleInterval,
+			CurrentTime
 		}
+
 
 		class DefaultProvider : IDefaultValueProvider<Properties>
 		{
@@ -35,12 +37,20 @@ namespace Whathecode.AxesPanels.Controls
 		static readonly Type Type = typeof( TimeControl );
 		public static DependencyPropertyFactory<Properties> PropertyFactory = new DependencyPropertyFactory<Properties>();
 		public static DependencyProperty VisibleIntervalProperty = PropertyFactory[ Properties.VisibleInterval ];
+		public static readonly DependencyProperty CurrentTimeProperty = PropertyFactory[ Properties.CurrentTime ];
 
 		[DependencyProperty( Properties.VisibleInterval, DefaultValueProvider = typeof( DefaultProvider ) )]
 		public Interval<DateTime, TimeSpan> VisibleInterval
 		{
 			get { return (Interval<DateTime, TimeSpan>)PropertyFactory.GetValue( this, Properties.VisibleInterval ); }
 			set { PropertyFactory.SetValue( this, Properties.VisibleInterval, value ); }
+		}
+
+		[DependencyProperty( Properties.CurrentTime )]
+		public DateTime CurrentTime
+		{
+			get { return (DateTime)PropertyFactory.GetValue( this, Properties.CurrentTime ); }
+			set { PropertyFactory.SetValue( this, Properties.CurrentTime, value ); }
 		}
 
 
