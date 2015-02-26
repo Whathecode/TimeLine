@@ -52,17 +52,19 @@ namespace TimeLineTest
 
 		public MainWindow()
 		{
+			DateTime now = DateTime.Now;
+
 			_properties = new NotifyPropertyFactory<Properties>( this, () => PropertyChanged );
 			Items = new ObservableCollection<object>();
-			CurrentTime = DateTime.Now;
-			TimeSpan zoom = TimeSpan.FromHours( 2 );
+			CurrentTime = now;
+			TimeSpan zoom = TimeSpan.FromHours( 1 );
 			VisibleInterval = new TimeInterval( CurrentTime - zoom, CurrentTime + zoom );
 
 			Timer update = new Timer( 100 );
 			update.Elapsed += ( sender, args ) =>
 			{
 				CurrentTime = DateTime.Now;
-				VisibleInterval = VisibleInterval.Move( TimeSpan.FromSeconds( 10 ) );
+				VisibleInterval = VisibleInterval.Move( TimeSpan.FromSeconds( 5 ) );
 			};
 			update.Start();
 
@@ -79,7 +81,7 @@ namespace TimeLineTest
 					BorderBrush = Brushes.White,
 					BorderThickness = new Thickness( 2 )
 				},
-				Occurance = DateTime.Now
+				Occurance = now
 			};
 			Items.Add( test );
 		}

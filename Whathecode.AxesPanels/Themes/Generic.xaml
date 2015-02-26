@@ -6,6 +6,7 @@
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	xmlns:converters="clr-namespace:Whathecode.System.Windows.Data;assembly=Whathecode.PresentationFramework"
+	xmlns:s="clr-namespace:System;assembly=System"
 	mc:Ignorable="d">
 	
 	<!-- TimeControl -->
@@ -123,30 +124,32 @@
 					<ControlTemplate.Resources>
 						<converters:SingleStringFormatConverter x:Key="StringFormat" />
 					</ControlTemplate.Resources>
-					<Path
-						Fill="{TemplateBinding Fill}"
-						Stroke="{TemplateBinding Stroke}"
-						StrokeThickness="{TemplateBinding StrokeThickness}">
-						<Path.LayoutTransform>
-							<ScaleTransform ScaleY="-1" />
-						</Path.LayoutTransform>
-						<Path.Data>
-							<CombinedGeometry
-								Geometry1="M-7.5,0 L7.5,0 L0,13Z"
-								GeometryCombineMode="Union">
-								<CombinedGeometry.Geometry2>
-									<RectangleGeometry>
-										<RectangleGeometry.Rect>
-											<Binding
-												Path="ActualHeight" RelativeSource="{RelativeSource TemplatedParent}"
-												Converter="{StaticResource StringFormat}" ConverterParameter="-1.5,0 3 {0}">
-											</Binding>
-										</RectangleGeometry.Rect>
-									</RectangleGeometry>
-								</CombinedGeometry.Geometry2>
-							</CombinedGeometry>
-						</Path.Data>
-					</Path>
+					<Canvas Background="{TemplateBinding Background}" Width="0">
+						<Path
+							Fill="{TemplateBinding Fill}"
+							Stroke="{TemplateBinding Stroke}"
+							StrokeThickness="{TemplateBinding StrokeThickness}">
+							<Path.LayoutTransform>
+								<ScaleTransform ScaleY="-1" />
+							</Path.LayoutTransform>
+							<Path.Data>
+								<CombinedGeometry
+									Geometry1="M-7.5,0 L7.5,0 L0,13Z"
+									GeometryCombineMode="Union">
+									<CombinedGeometry.Geometry2>
+										<RectangleGeometry>
+											<RectangleGeometry.Rect>
+												<Binding
+													Path="ActualHeight" RelativeSource="{RelativeSource TemplatedParent}"
+													Converter="{StaticResource StringFormat}" ConverterParameter="-1.5,0 3 {0}">
+												</Binding>
+											</RectangleGeometry.Rect>
+										</RectangleGeometry>
+									</CombinedGeometry.Geometry2>
+								</CombinedGeometry>
+							</Path.Data>
+						</Path>
+					</Canvas>
 				</ControlTemplate>
 			</Setter.Value>
 		</Setter>
@@ -157,19 +160,28 @@
 	<Style TargetType="{x:Type controls:TimeLineLabel}" BasedOn="{StaticResource {x:Type controls:TimeLineItem}}">
 
 		<Setter Property="StrokeThickness" Value="1" />
-		<Setter Property="axesPanels:TimePanel.AlignmentX" Value="Center" />
+		<Setter Property="axesPanels:TimePanel.SizeX" Value="{Binding Interval}" />
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="{x:Type controls:TimeLineLabel}">
-					<Line
-						Fill="{TemplateBinding Fill}"
-						Stroke="{TemplateBinding Stroke}"
-						StrokeThickness="{TemplateBinding StrokeThickness}"
-						Y2="300">
-						<Line.LayoutTransform>
+					<Canvas Background="{TemplateBinding Background}">
+						<Canvas.LayoutTransform>
 							<ScaleTransform ScaleY="-1" />
-						</Line.LayoutTransform>
-					</Line>
+						</Canvas.LayoutTransform>
+						<Line
+							Fill="{TemplateBinding Fill}"
+							Stroke="{TemplateBinding Stroke}"
+							StrokeThickness="{TemplateBinding StrokeThickness}"
+							Y2="{TemplateBinding ActualWidth}">
+						</Line>
+						<Label
+							Content="{Binding Path=(axesPanels:TimePanel.X), RelativeSource={RelativeSource TemplatedParent}}"
+							Foreground="{TemplateBinding Foreground}">
+							<Label.LayoutTransform>
+								<ScaleTransform ScaleY="-1" />
+							</Label.LayoutTransform>
+						</Label>
+					</Canvas>
 				</ControlTemplate>
 			</Setter.Value>
 		</Setter>

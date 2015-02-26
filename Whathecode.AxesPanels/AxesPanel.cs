@@ -105,7 +105,7 @@ namespace Whathecode.AxesPanels
 		public AxesLabelFactories<TX, TXSize, TY, TYSize> LabelFactories
 		{
 			get { return (AxesLabelFactories<TX, TXSize, TY, TYSize>)PropertyFactory.GetValue( this, AxesPanelBinding.LabelFactories ); }
-			set {  PropertyFactory.SetValue( this, AxesPanelBinding.LabelFactories, value ); }
+			set { PropertyFactory.SetValue( this, AxesPanelBinding.LabelFactories, value ); }
 		}
 
 

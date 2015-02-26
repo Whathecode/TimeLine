@@ -5,7 +5,8 @@
 	xmlns:controls="clr-namespace:Whathecode.AxesPanels.Controls;assembly=Whathecode.AxesPanels"
 	xmlns:options="http://schemas.microsoft.com/winfx/2006/xaml/presentation/options"
 	Title="Time Line Test"
-	DataContext="{Binding RelativeSource={RelativeSource Self}}">
+	DataContext="{Binding RelativeSource={RelativeSource Self}}"
+	FontFamily="Segoe UI Light">
 	
 	<Window.Resources>
 		<LinearGradientBrush x:Key="BackgroundBrush" StartPoint="0,0" EndPoint="0,1" options:Freeze="True">
@@ -22,7 +23,9 @@
 			ItemsSource="{Binding Items}"
 			CurrentTime="{Binding CurrentTime}"
 			VisibleInterval="{Binding VisibleInterval}"
-			ClipToBounds="True">
+			ClipToBounds="True"
+			Foreground="White"
+			FontSize="20">
 		
 			<controls:TimeLine.Resources>
 				<Style TargetType="controls:TimeIndicator">
@@ -36,9 +39,6 @@
 							</LinearGradientBrush>
 						</Setter.Value>
 					</Setter>
-				</Style>
-				<Style TargetType="controls:TimeLineLabel">
-					<Setter Property="Stroke" Value="White" />
 				</Style>
 			</controls:TimeLine.Resources>
 		

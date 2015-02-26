@@ -8,7 +8,7 @@ namespace Whathecode.AxesPanels.Controls
 	{
 		protected override FrameworkElement CreateLabel()
 		{
-			return new TimeLineLabel();
+			return new TimeLineLabel { Interval = StepSize };
 		}
 
 		protected override void InitializeLabel( PositionedElement positioned, AxesIntervals<DateTime, TimeSpan, double, double> visible )
