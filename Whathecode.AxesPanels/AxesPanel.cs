@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
 using System.Windows;
@@ -27,6 +28,11 @@ namespace Whathecode.AxesPanels
 		static readonly Type Type = typeof( AxesPanel<TX, TXSize, TY, TYSize> );
 		public static readonly DependencyPropertyFactory<AxesPanelBinding> PropertyFactory 
 			= new DependencyPropertyFactory<AxesPanelBinding>( typeof( AxesPanel<TX, TXSize, TY, TYSize> ) );
+
+		/// <summary>
+		///   Label factories grouped per override groups, which determine which labels override others.
+		/// </summary>
+		IEnumerable<IGrouping<string, AbstractAxesLabelCollection<TX, TXSize, TY, TYSize>>> _labelFactoryGroups;
 
 		// ReSharper disable StaticMemberInGenericType
 		public static readonly DependencyProperty MaximaXProperty = PropertyFactory[ AxesPanelBinding.MaximaX ];
@@ -373,44 +379,91 @@ namespace Whathecode.AxesPanels
 			if ( oldCollection != null )
 			{
 				oldCollection.CollectionChanged -= panel.OnLabelFactoriesChanged;
-				oldCollection.SelectMany( f => f.Select( l => l ) ).ForEach( l => panel.Children.Remove( l ) );
+				foreach ( var factory in oldCollection )
+				{
+					// ReSharper disable once AccessToForEachVariableInClosure
+					factory.ForEach( l => panel.RemoveLabel( factory, l ) );
+				}
 			}
+
 			newCollection.CollectionChanged += panel.OnLabelFactoriesChanged;
 			panel.UpdateLabelFactories();
-			newCollection.SelectMany( f => f.Select( l => l ) ).ForEach( l => panel.Children.Add( l ) );
+			panel._labelFactoryGroups = newCollection.GroupBy( f => f.OverrideGroup );
+			foreach ( var factory in newCollection.Reverse() ) // Factories need to be updated in reverse order, since the later ones have precedence.
+			{
+				factory.CollectionChanged += panel.OnLabelsChanged;
+				// ReSharper disable once AccessToForEachVariableInClosure
+				factory.ForEach( l => panel.AddLabel( factory, l ) );
+			}
 		}
 		void OnLabelFactoriesChanged( object sender, NotifyCollectionChangedEventArgs e )
 		{
+			_labelFactoryGroups = LabelFactories.GroupBy( f => f.OverrideGroup );
+
 			switch ( e.Action )
 			{
 				case NotifyCollectionChangedAction.Add:
-					e.NewItems.Cast<AbstractAxesLabelFactory<TX, TXSize, TY, TYSize>>().ForEach( f =>
+					e.NewItems.Cast<AbstractAxesLabelCollection<TX, TXSize, TY, TYSize>>().ForEach( f =>
 					{
 						f.CollectionChanged += OnLabelsChanged;
-						f.VisibleIntervalChanged( new AxesIntervals<TX, TXSize, TY, TYSize>( VisibleIntervalX, VisibleIntervalY ) );
-						f.ForEach( l => Children.Add( l ) );
 					} );
 					break;
 				case NotifyCollectionChangedAction.Remove:
-					e.OldItems.Cast<AbstractAxesLabelFactory<TX, TXSize, TY, TYSize>>().ForEach( f =>
+					e.OldItems.Cast<AbstractAxesLabelCollection<TX, TXSize, TY, TYSize>>().ForEach( f =>
 					{
 						f.CollectionChanged -= OnLabelsChanged;
-						f.ForEach( l => Children.Remove( l ) );
+						f.ForEach( l => RemoveLabel( f, l ) );
 					} );
 					break;
 			}
+
+			UpdateLabelFactories();
 		}
 		void OnLabelsChanged( object sender, NotifyCollectionChangedEventArgs e )
 		{
+			var factory = (AbstractAxesLabelCollection<TX, TXSize, TY, TYSize>)sender;
+
 			switch ( e.Action )
 			{
 				case NotifyCollectionChangedAction.Add:
-					e.NewItems.Cast<FrameworkElement>().ForEach( l => Children.Add( l ) );
+					e.NewItems.Cast<FrameworkElement>().ForEach( l => AddLabel( factory, l ) );
 					break;
 				case NotifyCollectionChangedAction.Remove:
-					e.OldItems.Cast<FrameworkElement>().ForEach( l => Children.Remove( l ) );
+					e.OldItems.Cast<FrameworkElement>().ForEach( l => RemoveLabel( factory, l ) );
 					break;
 			}
+		}
+
+		void AddLabel( AbstractAxesLabelCollection<TX, TXSize, TY, TYSize> hostFactory, FrameworkElement label )
+		{
+			Func<FrameworkElement, Tuple<TX, TY>> getPosition = l => Tuple.Create( (TX)l.GetValue( XProperty ), (TY)l.GetValue( YProperty ) );
+
+			// Get positions already taken up by precending factories within the same override group.
+			HashSet<Tuple<TX, TY>> positioned = new HashSet<Tuple<TX, TY>>();
+			List<AbstractAxesLabelCollection<TX, TXSize, TY, TYSize>> precedingFactories = _labelFactoryGroups
+				.First( g => g.Key == hostFactory.OverrideGroup )
+				.Reverse() // Factories need to be updated in reverse order, since the later ones have precedence.
+				.TakeWhile( f => f != hostFactory )
+				.ToList();
+			foreach ( var factory in precedingFactories )
+			{
+				foreach ( var taken in factory.Select( getPosition ) )
+				{
+					positioned.Add( taken );
+				}
+			}
+
+			// Only add children positioned on locations which have not been populated yet by preceding factories within the same override group.
+			Tuple<TX, TY> desiredPosition = getPosition( label );
+			if ( !positioned.Contains( desiredPosition ) )
+			{
+				Children.Add( label );
+			}
+		}
+
+		void RemoveLabel( AbstractAxesLabelCollection<TX, TXSize, TY, TYSize> hostFactory, FrameworkElement label )
+		{
+			Children.Remove( label );
 		}
 
 		[DependencyPropertyChanged( AxesPanelBinding.VisibleIntervalX )]
@@ -429,7 +482,10 @@ namespace Whathecode.AxesPanels
 		{
 			if ( LabelFactories != null )
 			{
-				LabelFactories.ForEach( f => f.VisibleIntervalChanged( new AxesIntervals<TX, TXSize, TY, TYSize>( VisibleIntervalX, VisibleIntervalY ) ) );
+				foreach ( var factory in LabelFactories.Reverse() ) // Factories need to be updated in reverse order, since the later ones have precedence.
+				{
+					factory.VisibleIntervalChanged( new AxesIntervals<TX, TXSize, TY, TYSize>( VisibleIntervalX, VisibleIntervalY ) );
+				}
 			}
 		}
 

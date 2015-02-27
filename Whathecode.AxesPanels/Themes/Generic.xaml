@@ -6,7 +6,7 @@
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	xmlns:converters="clr-namespace:Whathecode.System.Windows.Data;assembly=Whathecode.PresentationFramework"
-	xmlns:s="clr-namespace:System;assembly=System"
+	xmlns:sys="clr-namespace:System;assembly=mscorlib"
 	mc:Ignorable="d">
 	
 	<!-- TimeControl -->
@@ -68,10 +68,11 @@
 		<Setter Property="LabelFactories">
 			<Setter.Value>
 				<controls:TimeLineLabelFactories>
+					<controls:TimeIntervalLabelFactory StepSize="00:15:00" LabelFormat="HH:mm" OverrideGroup="Ticks" />
+					<controls:TimeIntervalLabelFactory StepSize="01:00:00" LabelFormat="HH:mm" OverrideGroup="Ticks" />
 					<controls:TimeLineLabelCollection>
 						<controls:TimeIndicator />
 					</controls:TimeLineLabelCollection>
-					<controls:TimeIntervalLabelFactory StepSize="00:15:00" LabelFormat="HH:mm" />
 				</controls:TimeLineLabelFactories>
 			</Setter.Value>
 		</Setter>

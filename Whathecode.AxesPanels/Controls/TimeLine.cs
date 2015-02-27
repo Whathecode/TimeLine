@@ -20,9 +20,9 @@ namespace Whathecode.AxesPanels.Controls
 
 
 		[DependencyProperty( TimeLineProperties.LabelFactories )]
-		public TimeLineLabelFactories LabelFactories
+		public AxesLabelFactories<DateTime, TimeSpan, double, double> LabelFactories
 		{
-			get { return (TimeLineLabelFactories)Factory.GetValue( this, TimeLineProperties.LabelFactories ); }
+			get { return (AxesLabelFactories<DateTime, TimeSpan, double, double>)Factory.GetValue( this, TimeLineProperties.LabelFactories ); }
 			set { Factory.SetValue( this, TimeLineProperties.LabelFactories, value ); }
 		}
 

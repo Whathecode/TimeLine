@@ -31,7 +31,6 @@ namespace Whathecode.AxesPanels
 		readonly List<PositionedElement> _visibleLabels = new List<PositionedElement>();
 		readonly Stack<FrameworkElement> _availableLabels = new Stack<FrameworkElement>(); 
 
-
 		internal override void VisibleIntervalChanged( AxesIntervals<TX, TXSize, TY, TYSize> visible )
 		{
 			// Create extended intervals.
@@ -75,15 +74,15 @@ namespace Whathecode.AxesPanels
 				{
 					toPlace = CreateLabel();
 					toPlace.CacheMode = new BitmapCache();
-					Add( toPlace );
 				}
 				else
 				{
 					toPlace = _availableLabels.Pop();
 				}
-
 				toPlace.SetValue( AxesPanel<TX, TXSize, TY, TYSize>.XProperty, position.Item1 );
 				toPlace.SetValue( AxesPanel<TX, TXSize, TY, TYSize>.YProperty, position.Item2 );
+				Add( toPlace );
+
 				var positioned = new PositionedElement( toPlace, position );
 				_visibleLabels.Add( positioned );
 				InitializeLabel( positioned, visible );
@@ -97,7 +96,7 @@ namespace Whathecode.AxesPanels
 
 		/// <summary>
 		///   Returns all positions on which to place labels within the specified interval.
-		///   Label size does not need to be taken into account, and is accounted for by <see cref="GetMaximumLabelSize" />.
+		///   
 		/// </summary>
 		protected abstract IEnumerable<Tuple<TX, TY>> GetPositions( AxesIntervals<TX, TXSize, TY, TYSize> intervals );
 
