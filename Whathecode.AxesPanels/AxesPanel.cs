@@ -286,18 +286,10 @@ namespace Whathecode.AxesPanels
 					{
 						element.Height = IntervalSize( VisibleIntervalY, (TYSize)sizeY, availableSize.Height );
 					}
-
-					// In case elements are wider than the available size, ensure they are still sized as such, and simply cropped.
-					availableSize = new Size(
-						Math.Max( availableSize.Width, double.IsNaN( element.Width ) ? availableSize.Width : element.Width ),
-						Math.Max( availableSize.Height, double.IsNaN( element.Height ) ? availableSize.Height : element.Height ) );
 				}
 
 				// Measure desired size within the available space.
 				child.Measure( availableSize );
-				availableSize = new Size(
-					Math.Max( availableSize.Width, child.DesiredSize.Width ),
-					Math.Max( availableSize.Height, child.DesiredSize.Height ) );
 			}
 
 			// The idea behind this panel is to display the specified plane area in the available size.

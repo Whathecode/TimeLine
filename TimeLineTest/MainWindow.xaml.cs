@@ -64,8 +64,8 @@ namespace TimeLineTest
 			update.Elapsed += ( sender, args ) =>
 			{
 				CurrentTime = DateTime.Now;
-				VisibleInterval = VisibleInterval.Move( TimeSpan.FromSeconds( 20 ) );
-				//VisibleInterval = VisibleInterval.Scale( 1.005 );
+				//VisibleInterval = VisibleInterval.Move( TimeSpan.FromSeconds( 20 ) );
+				VisibleInterval = VisibleInterval.Scale( 1.005 );
 			};
 			update.Start();
 

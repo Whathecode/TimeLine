@@ -70,6 +70,7 @@
 				<controls:TimeLineLabelFactories>
 					<controls:TimeIntervalLabelFactory StepSize="00:15:00" LabelFormat="HH:mm" OverrideGroup="Ticks" />
 					<controls:TimeIntervalLabelFactory StepSize="01:00:00" LabelFormat="HH:mm" OverrideGroup="Ticks" />
+					<controls:TimeIntervalLabelFactory StepSize="06:00:00" LabelFormat="HH:mm" OverrideGroup="Ticks" />
 					<controls:TimeLineLabelCollection>
 						<controls:TimeIndicator />
 					</controls:TimeLineLabelCollection>
@@ -125,7 +126,7 @@
 					<ControlTemplate.Resources>
 						<converters:SingleStringFormatConverter x:Key="StringFormat" />
 					</ControlTemplate.Resources>
-					<Canvas Background="{TemplateBinding Background}" Width="0">
+					<Canvas Width="0">
 						<Path
 							Fill="{TemplateBinding Fill}"
 							Stroke="{TemplateBinding Stroke}"
