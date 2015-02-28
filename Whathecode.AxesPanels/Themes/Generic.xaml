@@ -108,10 +108,14 @@
 
 		<Setter Property="DataContext" Value="{Binding RelativeSource={RelativeSource Self}}" />
 		<Setter Property="axes:TimePanel.X" Value="{Binding Occurance}" />
-		<Setter Property="IsHitTestVisible" Value="False" />
 		<Setter Property="axes:TimePanel.SizeY" Value="100" />
+		<Setter Property="IsHitTestVisible" Value="False" />
 		<Setter Property="Fill" Value="{Binding Foreground, RelativeSource={RelativeSource Self}}" />
 		<Setter Property="Stroke" Value="{Binding Foreground, RelativeSource={RelativeSource Self}}" />
+		
+		<!-- Prevent rendering errors (labels shown thinner than they are), due to excessively large label sizes. -->
+		<Setter Property="MaxHeight" Value="{Binding ActualHeight, RelativeSource={RelativeSource AncestorType=controls:TimeLine}}" />
+		<Setter Property="MaxWidth" Value="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType=controls:TimeLine}}" />
 
 	</Style>
 	
@@ -169,6 +173,7 @@
 				<ControlTemplate TargetType="{x:Type controls:TimeLineLabel}">
 					<ControlTemplate.Resources>
 						<converters:SingleStringFormatConverter x:Key="StringFormat" />
+						<converters:CalculateMultiValueConverter x:Key="Calculate" />
 					</ControlTemplate.Resources>
 					<Canvas Background="{TemplateBinding Background}">
 						<Canvas.LayoutTransform>
@@ -178,8 +183,7 @@
 							Fill="{TemplateBinding Fill}"
 							Stroke="{TemplateBinding Stroke}"
 							StrokeThickness="{TemplateBinding StrokeThickness}"
-							Y2="{TemplateBinding ActualWidth}">
-						</Line>
+							Y2="{TemplateBinding ActualWidth}" />
 						<Label
 							Foreground="{TemplateBinding Foreground}">
 							<Label.Content>
