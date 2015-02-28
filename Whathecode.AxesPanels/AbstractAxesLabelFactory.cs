@@ -31,7 +31,8 @@ namespace Whathecode.AxesPanels
 		readonly List<PositionedElement> _visibleLabels = new List<PositionedElement>();
 		readonly Stack<FrameworkElement> _availableLabels = new Stack<FrameworkElement>(); 
 
-		internal override void VisibleIntervalChanged( AxesIntervals<TX, TXSize, TY, TYSize> visible )
+
+		internal override void VisibleIntervalChanged( AxesIntervals<TX, TXSize, TY, TYSize> visible, Size panelSize )
 		{
 			// Create extended intervals.
 			Interval<TX, TXSize> intervalX = visible.IntervalX;
@@ -45,7 +46,7 @@ namespace Whathecode.AxesPanels
 			double scaleY = Interval<TY, TYSize>.ConvertSizeToDouble( extendedY ) / Interval<TY, TYSize>.ConvertSizeToDouble( intervalY.Size );
 			var extendedIntervals = new AxesIntervals<TX, TXSize, TY, TYSize>( intervalX.Scale( scaleX ), intervalY.Scale( scaleY ) );
 
-			var toPosition = new HashSet<Tuple<TX, TY>>( GetPositions( extendedIntervals ) );
+			var toPosition = new HashSet<Tuple<TX, TY>>( GetPositions( extendedIntervals, panelSize ) );
 
 			// Free up labels which are no longer visible, and update those already positioned.
 			var toRemove = new List<PositionedElement>();
@@ -96,9 +97,8 @@ namespace Whathecode.AxesPanels
 
 		/// <summary>
 		///   Returns all positions on which to place labels within the specified interval.
-		///   
 		/// </summary>
-		protected abstract IEnumerable<Tuple<TX, TY>> GetPositions( AxesIntervals<TX, TXSize, TY, TYSize> intervals );
+		protected abstract IEnumerable<Tuple<TX, TY>> GetPositions( AxesIntervals<TX, TXSize, TY, TYSize> intervals, Size panelSize );
 
 		/// <summary>
 		///   Create a new label which can be positioned later.

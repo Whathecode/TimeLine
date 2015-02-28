@@ -21,6 +21,6 @@ namespace Whathecode.AxesPanels
 		public string OverrideGroup { get; set; }
 
 
-		internal abstract void VisibleIntervalChanged( AxesIntervals<TX, TXSize, TY, TYSize> visible );
+		internal abstract void VisibleIntervalChanged( AxesIntervals<TX, TXSize, TY, TYSize> visible, Size panelSize );
 	}
 }

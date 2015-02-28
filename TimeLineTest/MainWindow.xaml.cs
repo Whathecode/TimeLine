@@ -57,7 +57,7 @@ namespace TimeLineTest
 			_properties = new NotifyPropertyFactory<Properties>( this, () => PropertyChanged );
 			Items = new ObservableCollection<object>();
 			CurrentTime = now;
-			TimeSpan zoom = TimeSpan.FromHours( 2 );
+			TimeSpan zoom = TimeSpan.FromMinutes( 30 );
 			VisibleInterval = new TimeInterval( CurrentTime - zoom, CurrentTime + zoom );
 
 			Timer update = new Timer( 100 );
@@ -65,7 +65,7 @@ namespace TimeLineTest
 			{
 				CurrentTime = DateTime.Now;
 				//VisibleInterval = VisibleInterval.Move( TimeSpan.FromSeconds( 20 ) );
-				VisibleInterval = VisibleInterval.Scale( 1.005 );
+				VisibleInterval = VisibleInterval.Scale( 1.01 );
 			};
 			update.Start();
 

@@ -480,7 +480,9 @@ namespace Whathecode.AxesPanels
 			{
 				foreach ( var factory in LabelFactories.Reverse() ) // Factories need to be updated in reverse order, since the later ones have precedence.
 				{
-					factory.VisibleIntervalChanged( new AxesIntervals<TX, TXSize, TY, TYSize>( VisibleIntervalX, VisibleIntervalY ) );
+					factory.VisibleIntervalChanged(
+						new AxesIntervals<TX, TXSize, TY, TYSize>( VisibleIntervalX, VisibleIntervalY ),
+						new Size( ActualWidth, ActualHeight ) );
 				}
 			}
 		}
