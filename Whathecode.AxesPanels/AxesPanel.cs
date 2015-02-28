@@ -457,6 +457,10 @@ namespace Whathecode.AxesPanels
 			Tuple<TX, TY> desiredPosition = getPosition( label );
 			if ( !positioned.Contains( desiredPosition ) )
 			{
+				// Set Z index to position later defined factories more on top.
+				var index = LabelFactories.IndexOf( hostFactory );
+				label.SetValue( ZIndexProperty, index );
+
 				Children.Add( label );
 			}
 		}
