@@ -10,13 +10,15 @@ namespace Whathecode.AxesPanels.Controls
 	{
 		public enum LabelProperties
 		{
-			Interval
+			Interval,
+			FactoryName
 		}
 
 
 		static readonly Type Type = typeof( TimeLineTick );
 		public static readonly DependencyPropertyFactory<LabelProperties> Factory = new DependencyPropertyFactory<LabelProperties>();
 		public static readonly DependencyProperty IntervalProperty = Factory[ LabelProperties.Interval ];
+		public static readonly DependencyProperty FactoryNameProperty = Factory[ LabelProperties.FactoryName ];
 
 
 		[DependencyProperty( LabelProperties.Interval )]
@@ -24,6 +26,13 @@ namespace Whathecode.AxesPanels.Controls
 		{
 			get { return (TimeSpan)Factory.GetValue( this, LabelProperties.Interval ); }
 			set { Factory.SetValue( this, LabelProperties.Interval, value ); }
+		}
+
+		[DependencyProperty( LabelProperties.FactoryName )]
+		public string FactoryName
+		{
+			get { return (string)Factory.GetValue( this, LabelProperties.FactoryName ); }
+			set { Factory.SetValue( this, LabelProperties.FactoryName, value ); }
 		}
 
 

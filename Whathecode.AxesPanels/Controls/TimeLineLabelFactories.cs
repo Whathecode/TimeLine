@@ -13,7 +13,7 @@ namespace Whathecode.AxesPanels.Controls
 		/// </summary>
 		public string GetDominantFactory( Interval<DateTime, TimeSpan> visibleInterval, double inWidth )
 		{
-			var visible = this.OfType<TimeIntervalTickFactory>().Where( f => !f.MinimumPixelsExceeded ).ToList();
+			var visible = this.OfType<TimeLineTickFactory>().Where( f => !f.MinimumPixelsExceeded ).ToList();
 			if ( visible.Count == 0 )
 			{
 				return "";

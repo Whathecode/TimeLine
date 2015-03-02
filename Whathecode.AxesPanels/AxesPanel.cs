@@ -437,11 +437,14 @@ namespace Whathecode.AxesPanels
 				.Reverse() // Factories need to be updated in reverse order, since the later ones have precedence.
 				.TakeWhile( f => f != hostFactory )
 				.ToList();
-			foreach ( var factory in precedingFactories )
+			if ( hostFactory.OverrideGroup != null )
 			{
-				foreach ( var taken in factory.Select( getPosition ) )
+				foreach ( var factory in precedingFactories )
 				{
-					positioned.Add( taken );
+					foreach ( var taken in factory.Select( getPosition ) )
+					{
+						positioned.Add( taken );
+					}
 				}
 			}
 

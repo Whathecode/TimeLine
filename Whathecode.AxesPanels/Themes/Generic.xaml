@@ -68,13 +68,17 @@
 			<Setter.Value>
 				<controls:TimeLineLabelFactories>
 					<!-- Ticks, from quarters to years. -->
-					<controls:TimeIntervalTickFactory Name="Quarters" StepSize="00:15:00" MinimumPixelsBetweenLabels="60" OverrideGroup="Ticks" />
-					<controls:TimeIntervalTickFactory Name="Hours" TimeStepSize="Hour" MinimumPixelsBetweenLabels="60" OverrideGroup="Ticks" />
-					<controls:TimeIntervalTickFactory Name="DayQuarters" StepSize="06:00:00" MinimumPixelsBetweenLabels="60" OverrideGroup="Ticks" />
-					<controls:TimeIntervalTickFactory Name="Days" TimeStepSize="Day" MinimumPixelsBetweenLabels="60" OverrideGroup="Ticks" />
-					<controls:TimeIntervalTickFactory Name="Weeks" StepSize="7.00:00:00" MinimumPixelsBetweenLabels="60" OverrideGroup="Ticks" />
-					<controls:TimeIntervalTickFactory Name="Months" TimeStepSize="Month" MinimumPixelsBetweenLabels="100" OverrideGroup="Ticks" />
-					<controls:TimeIntervalTickFactory Name="Years" TimeStepSize="Year" MinimumPixelsBetweenLabels="60" OverrideGroup="Ticks" />
+					<controls:TimeLineTickFactory Name="Quarters" StepSize="00:15:00" MinimumPixelsBetweenLabels="60" OverrideGroup="Ticks" />
+					<controls:TimeLineTickFactory Name="Hours" TimeStepSize="Hour" MinimumPixelsBetweenLabels="60" OverrideGroup="Ticks" />
+					<controls:TimeLineTickFactory Name="DayQuarters" StepSize="06:00:00" MinimumPixelsBetweenLabels="60" OverrideGroup="Ticks" />
+					<controls:TimeLineTickFactory Name="Days" TimeStepSize="Day" MinimumPixelsBetweenLabels="50" OverrideGroup="Ticks" />
+					<controls:TimeLineTickFactory Name="Weeks" StepSize="7.00:00:00" MinimumPixelsBetweenLabels="60" OverrideGroup="Ticks" />
+					<controls:TimeLineTickFactory Name="Months" TimeStepSize="Month" MinimumPixelsBetweenLabels="50" OverrideGroup="Ticks" />
+					<controls:TimeLineTickFactory Name="Years" TimeStepSize="Year" MinimumPixelsBetweenLabels="60" OverrideGroup="Ticks" />
+					<!-- Additional context labels. -->
+					<controls:TimeLineContextLabelFactory Name="DayContext" TimeStepSize="Day" MinimumPixelsBetweenLabels="50" FixedY="100" />
+					<controls:TimeLineContextLabelFactory Name="MonthContext" TimeStepSize="Month" MinimumPixelsBetweenLabels="100" FixedY="100" />
+					<controls:TimeLineContextLabelFactory Name="YearContext" TimeStepSize="Year" MinimumPixelsBetweenLabels="100" FixedY="100" />
 					<!-- Fixed elements. -->
 					<controls:TimeLineLabelCollection>
 						<controls:TimeIndicator />
@@ -112,16 +116,15 @@
 	<!-- TimeLineItem -->
 	<Style TargetType="{x:Type controls:TimeLineItem}">
 
+		<Style.Resources>
+			<controls:TickLabelConverter x:Key="TickLabelConverter" />
+		</Style.Resources>
+		
 		<Setter Property="DataContext" Value="{Binding RelativeSource={RelativeSource Self}}" />
 		<Setter Property="axes:TimePanel.X" Value="{Binding Occurance}" />
-		<Setter Property="axes:TimePanel.SizeY" Value="100" />
 		<Setter Property="IsHitTestVisible" Value="False" />
 		<Setter Property="Fill" Value="{Binding Foreground, RelativeSource={RelativeSource Self}}" />
 		<Setter Property="Stroke" Value="{Binding Foreground, RelativeSource={RelativeSource Self}}" />
-		
-		<!-- Prevent rendering errors (labels shown thinner than they are), due to excessively large label sizes. -->
-		<Setter Property="MaxHeight" Value="{Binding ActualHeight, RelativeSource={RelativeSource AncestorType=controls:TimeLine}}" />
-		<Setter Property="MaxWidth" Value="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType=controls:TimeLine}}" />
 
 	</Style>
 	
@@ -129,6 +132,7 @@
 	<Style TargetType="{x:Type controls:TimeIndicator}" BasedOn="{StaticResource {x:Type controls:TimeLineItem}}">
 
 		<Setter Property="Occurance" Value="{Binding CurrentTime, RelativeSource={RelativeSource AncestorType=controls:TimeLine}}" />
+		<Setter Property="axes:TimePanel.SizeY" Value="100" />
 		<Setter Property="axes:TimePanel.AlignmentX" Value="Center" />
 		<Setter Property="Template">
 			<Setter.Value>
@@ -171,44 +175,68 @@
 	<!-- TimeLineTick -->
 	<Style TargetType="{x:Type controls:TimeLineTick}" BasedOn="{StaticResource {x:Type controls:TimeLineItem}}">
 
-		<Style.Resources>
-			<controls:TickLabelConverter x:Key="TickLabelConverter" />
-		</Style.Resources>
-
 		<Setter Property="Occurance" Value="{Binding Path=(axes:TimePanel.X)}" />
-		<Setter Property="StrokeThickness" Value="1" />
+		<Setter Property="StrokeThickness" Value="1.5" />
 		<Setter Property="axes:TimePanel.SizeX" Value="{Binding Interval}" />
-		<Setter Property="Padding" Value="5, 0, 0, 0" />
+		<Setter Property="axes:TimePanel.SizeY" Value="100" />
+		<Setter Property="Padding" Value="5, 0, 0, 1" />
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="{x:Type controls:TimeLineTick}">
 					<ControlTemplate.Resources>
 						<converters:SingleStringFormatConverter x:Key="StringFormat" />
 					</ControlTemplate.Resources>
-					<Canvas Background="{TemplateBinding Background}">
-						<Canvas.LayoutTransform>
-							<ScaleTransform ScaleY="-1" />
-						</Canvas.LayoutTransform>
+					<Grid
+						Background="{TemplateBinding Background}">
 						<Line
+							ClipToBounds="True"
+							VerticalAlignment="Bottom"
 							Fill="{TemplateBinding Fill}"
 							Stroke="{TemplateBinding Stroke}"
 							StrokeThickness="{TemplateBinding StrokeThickness}"
 							Y2="{TemplateBinding ActualWidth}" />
 						<Label
+							VerticalAlignment="Bottom"
 							Padding="{TemplateBinding Padding}"
 							Foreground="{TemplateBinding Foreground}">
 							<Label.Content>
 								<MultiBinding Converter="{StaticResource TickLabelConverter}">
 									<Binding Path="Occurance" RelativeSource="{RelativeSource TemplatedParent}" />
 									<Binding Path="Interval" RelativeSource="{RelativeSource TemplatedParent}" />
+									<Binding Path="FactoryName" RelativeSource="{RelativeSource TemplatedParent}" />
 									<Binding Path="DominantLabelFactory" RelativeSource="{RelativeSource AncestorType=controls:TimeLine}" />
 								</MultiBinding>
 							</Label.Content>
-							<Label.LayoutTransform>
-								<ScaleTransform ScaleY="-1" />
-							</Label.LayoutTransform>
 						</Label>
-					</Canvas>
+					</Grid>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+		
+	</Style>
+	
+	<!-- TimeLineContextLabel -->
+	<Style TargetType="{x:Type controls:TimeLineContextLabel}" BasedOn="{StaticResource {x:Type controls:TimeLineItem}}">
+
+		<Setter Property="Occurance" Value="{Binding Path=(axes:TimePanel.X)}" />
+		<Setter Property="axes:TimePanel.AlignmentY" Value="BeforeValue" />
+		<Setter Property="Padding" Value="5, 0, 0, 0" />
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="{x:Type controls:TimeLineContextLabel}">
+					<Label
+						Margin="0, 0, 0, 25"
+						Padding="{TemplateBinding Padding}"
+						Foreground="{TemplateBinding Foreground}">
+						<Label.Content>
+							<MultiBinding Converter="{StaticResource TickLabelConverter}">
+								<Binding Path="Occurance" RelativeSource="{RelativeSource TemplatedParent}" />
+								<Binding Path="Interval" RelativeSource="{RelativeSource TemplatedParent}" />
+								<Binding Path="FactoryName" RelativeSource="{RelativeSource TemplatedParent}" />
+								<Binding Path="DominantLabelFactory" RelativeSource="{RelativeSource AncestorType=controls:TimeLine}" />
+							</MultiBinding>
+						</Label.Content>
+					</Label>
 				</ControlTemplate>
 			</Setter.Value>
 		</Setter>

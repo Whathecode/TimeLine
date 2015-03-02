@@ -1,19 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Windows;
 using Whathecode.System;
 using Whathecode.System.Extensions;
 
 
 namespace Whathecode.AxesPanels.Controls
 {
-	public class TimeIntervalTickFactory : AbstractRegularXLabelFactory<DateTime, TimeSpan, double, double>
+	public abstract class AbstractTimeIntervalLabelFactory : AbstractRegularXLabelFactory<DateTime, TimeSpan, double, double>
 	{
 		/// <summary>
 		///   Name used to identify this factory.
 		/// </summary>
 		public string Name { get; set; }
-
 
 		DateTimePart? _timeStepSize;
 		/// <summary>
@@ -56,21 +54,6 @@ namespace Whathecode.AxesPanels.Controls
 			}
 		}
 
-
-		protected override FrameworkElement CreateLabel()
-		{
-			return new TimeLineTick { Interval = MaximumLabelSize };
-		}
-
-		protected override void InitializeLabel( PositionedElement positioned, AxesIntervals<DateTime, TimeSpan, double, double> visible )
-		{
-			// Nothing to do.
-		}
-
-		protected override void UpdateLabel( PositionedElement label, AxesIntervals<DateTime, TimeSpan, double, double> visible )
-		{
-			// Nothing to do.
-		}
 
 		protected override IEnumerable<DateTime> GetXValues( AxesIntervals<DateTime, TimeSpan, double, double> intervals )
 		{

@@ -11,7 +11,8 @@ namespace Whathecode.AxesPanels.Controls
 			return FormatLabel(
 				(DateTime)values[ 0 ],
 				(TimeSpan)values[ 1 ],
-				(string)values[ 2 ] );
+				(string)values[ 2 ],
+				(string)values[ 3 ] );
 		}
 
 		public override object[] ConvertBack( string value )
@@ -19,6 +20,6 @@ namespace Whathecode.AxesPanels.Controls
 			throw new NotSupportedException();
 		}
 
-		protected abstract string FormatLabel( DateTime occurance, TimeSpan interval, string dominantFactory );
+		protected abstract string FormatLabel( DateTime occurance, TimeSpan interval, string factoryName, string dominantFactory );
 	}
 }
