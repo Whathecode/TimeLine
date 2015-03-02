@@ -6,19 +6,17 @@ using Whathecode.System.Windows.DependencyPropertyFactory.Attributes;
 
 namespace Whathecode.AxesPanels.Controls
 {
-	public class TimeLineLabel : TimeLineItem
+	public class TimeLineTick : TimeLineItem
 	{
 		public enum LabelProperties
 		{
-			Interval,
-			LabelFormat
+			Interval
 		}
 
 
-		static readonly Type Type = typeof( TimeLineLabel );
+		static readonly Type Type = typeof( TimeLineTick );
 		public static readonly DependencyPropertyFactory<LabelProperties> Factory = new DependencyPropertyFactory<LabelProperties>();
 		public static readonly DependencyProperty IntervalProperty = Factory[ LabelProperties.Interval ];
-		public static readonly DependencyProperty LabelFormatProperty = Factory[ LabelProperties.LabelFormat ];
 
 
 		[DependencyProperty( LabelProperties.Interval )]
@@ -28,18 +26,8 @@ namespace Whathecode.AxesPanels.Controls
 			set { Factory.SetValue( this, LabelProperties.Interval, value ); }
 		}
 
-		/// <summary>
-		///   A DateTime format string, determining how to represent the occurance.
-		/// </summary>
-		[DependencyProperty( LabelProperties.LabelFormat )]
-		public string LabelFormat
-		{
-			get { return (string)Factory.GetValue( this, LabelProperties.LabelFormat ); }
-			set { Factory.SetValue( this, LabelProperties.LabelFormat, value ); }
-		}
 
-
-		static TimeLineLabel()
+		static TimeLineTick()
 		{
 			DefaultStyleKeyProperty.OverrideMetadata( Type, new FrameworkPropertyMetadata( Type ) );
 		}

@@ -6,7 +6,6 @@
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	xmlns:converters="clr-namespace:Whathecode.System.Windows.Data;assembly=Whathecode.PresentationFramework"
-	xmlns:sys="clr-namespace:System;assembly=mscorlib"
 	mc:Ignorable="d">
 	
 	<!-- TimeControl -->
@@ -68,21 +67,15 @@
 		<Setter Property="LabelFactories">
 			<Setter.Value>
 				<controls:TimeLineLabelFactories>
-					<controls:TimeIntervalLabelFactory
-						StepSize="00:15:00" LabelFormat="HH:mm" MinimumPixelsBetweenLabels="60"
-						OverrideGroup="Ticks" />
-					<controls:TimeIntervalLabelFactory
-						StepSize="01:00:00" LabelFormat="HH:mm" MinimumPixelsBetweenLabels="60"
-						OverrideGroup="Ticks" />
-					<controls:TimeIntervalLabelFactory
-						StepSize="06:00:00" LabelFormat="HH:mm" MinimumPixelsBetweenLabels="60"
-						OverrideGroup="Ticks" /> <!-- Day quarters. -->
-					<controls:TimeIntervalLabelFactory
-						StepSize="1.00:00:00" LabelFormat="d\t\h" MinimumPixelsBetweenLabels="60"
-						OverrideGroup="Ticks" /> <!-- Days. -->
-					<controls:TimeIntervalLabelFactory
-						StepSize="7.00:00:00" LabelFormat="d\t\h" MinimumPixelsBetweenLabels="60"
-						OverrideGroup="Ticks" /> <!-- Weeks. -->
+					<!-- Ticks, from quarters to years. -->
+					<controls:TimeIntervalTickFactory Name="Quarters" StepSize="00:15:00" MinimumPixelsBetweenLabels="60" OverrideGroup="Ticks" />
+					<controls:TimeIntervalTickFactory Name="Hours" TimeStepSize="Hour" MinimumPixelsBetweenLabels="60" OverrideGroup="Ticks" />
+					<controls:TimeIntervalTickFactory Name="DayQuarters" StepSize="06:00:00" MinimumPixelsBetweenLabels="60" OverrideGroup="Ticks" />
+					<controls:TimeIntervalTickFactory Name="Days" TimeStepSize="Day" MinimumPixelsBetweenLabels="60" OverrideGroup="Ticks" />
+					<controls:TimeIntervalTickFactory Name="Weeks" StepSize="7.00:00:00" MinimumPixelsBetweenLabels="60" OverrideGroup="Ticks" />
+					<controls:TimeIntervalTickFactory Name="Months" TimeStepSize="Month" MinimumPixelsBetweenLabels="100" OverrideGroup="Ticks" />
+					<controls:TimeIntervalTickFactory Name="Years" TimeStepSize="Year" MinimumPixelsBetweenLabels="60" OverrideGroup="Ticks" />
+					<!-- Fixed elements. -->
 					<controls:TimeLineLabelCollection>
 						<controls:TimeIndicator />
 					</controls:TimeLineLabelCollection>
@@ -98,6 +91,7 @@
 						<Border
 							BorderThickness="{TemplateBinding BorderThickness}">
 							<axes:TimePanel
+								x:Name="PART_Labels"
 								LabelFactories="{TemplateBinding LabelFactories}"
 								VisibleIntervalX="{TemplateBinding VisibleInterval}" />
 						</Border>
@@ -174,8 +168,12 @@
 
 	</Style>
 	
-	<!-- TimeLineLabel -->
-	<Style TargetType="{x:Type controls:TimeLineLabel}" BasedOn="{StaticResource {x:Type controls:TimeLineItem}}">
+	<!-- TimeLineTick -->
+	<Style TargetType="{x:Type controls:TimeLineTick}" BasedOn="{StaticResource {x:Type controls:TimeLineItem}}">
+
+		<Style.Resources>
+			<controls:TickLabelConverter x:Key="TickLabelConverter" />
+		</Style.Resources>
 
 		<Setter Property="Occurance" Value="{Binding Path=(axes:TimePanel.X)}" />
 		<Setter Property="StrokeThickness" Value="1" />
@@ -183,7 +181,7 @@
 		<Setter Property="Padding" Value="5, 0, 0, 0" />
 		<Setter Property="Template">
 			<Setter.Value>
-				<ControlTemplate TargetType="{x:Type controls:TimeLineLabel}">
+				<ControlTemplate TargetType="{x:Type controls:TimeLineTick}">
 					<ControlTemplate.Resources>
 						<converters:SingleStringFormatConverter x:Key="StringFormat" />
 					</ControlTemplate.Resources>
@@ -200,12 +198,10 @@
 							Padding="{TemplateBinding Padding}"
 							Foreground="{TemplateBinding Foreground}">
 							<Label.Content>
-								<MultiBinding Converter="{converters:SingleStringDynamicFormatConverter}">
+								<MultiBinding Converter="{StaticResource TickLabelConverter}">
 									<Binding Path="Occurance" RelativeSource="{RelativeSource TemplatedParent}" />
-									<Binding
-										Path="LabelFormat"
-										RelativeSource="{RelativeSource TemplatedParent}"
-										Converter="{converters:SingleStringFormatConverter Format='\{{0:{0}}}'}" />
+									<Binding Path="Interval" RelativeSource="{RelativeSource TemplatedParent}" />
+									<Binding Path="DominantLabelFactory" RelativeSource="{RelativeSource AncestorType=controls:TimeLine}" />
 								</MultiBinding>
 							</Label.Content>
 							<Label.LayoutTransform>
@@ -216,7 +212,7 @@
 				</ControlTemplate>
 			</Setter.Value>
 		</Setter>
-
+		
 	</Style>
 
 </ResourceDictionary>
