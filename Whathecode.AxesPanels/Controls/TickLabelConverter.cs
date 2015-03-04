@@ -51,6 +51,21 @@ namespace Whathecode.AxesPanels.Controls
 					return occurance.ToString( "HH:mm" );
 			}
 
+			// Breadcrumb labels underneath headers.
+			switch ( factoryName )
+			{
+				case "YearBreadcrumbs":
+					return occurance.ToString( "yyyy" );
+				case "MonthBreadcrumbs":
+				case "WeekBreadcrumbs":
+					return occurance.ToString( "Y" );
+				case "DayBreadcrumbs":
+				case "DayQuarterBreadcrumbs":
+				case "HourBreadcrumbs":
+				case "QuarterBreadcrumbs":
+					return occurance.ToString( "D" );
+			}
+
 			// For the following labels, dominant factory is required.
 			if ( dominantFactory == "" )
 			{

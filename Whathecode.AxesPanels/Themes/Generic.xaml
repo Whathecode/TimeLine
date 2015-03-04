@@ -80,13 +80,21 @@
 					<controls:TimeLineContextLabelFactory Name="MonthContext" TimeStepSize="Month" MinimumPixelsBetweenLabels="100" FixedY="100" />
 					<controls:TimeLineContextLabelFactory Name="YearContext" TimeStepSize="Year" MinimumPixelsBetweenLabels="100" FixedY="100" />
 					<!-- Header labels. -->
-					<controls:TimeLineHeaderFactory Name="YearHeader" TimeStepSize="Year" MinimumPixelsBetweenLabels="200" />
-					<controls:TimeLineHeaderFactory Name="MonthHeader" TimeStepSize="Month" MinimumPixelsBetweenLabels="200" />
-					<controls:TimeLineHeaderFactory Name="WeekHeader" StepSize="7.00:00:00" MinimumPixelsBetweenLabels="200" />
-					<controls:TimeLineHeaderFactory Name="DayHeader" TimeStepSize="Day" MinimumPixelsBetweenLabels="200" />
-					<controls:TimeLineHeaderFactory Name="DayQuarterHeader" StepSize="06:00:00" MinimumPixelsBetweenLabels="200" />
-					<controls:TimeLineHeaderFactory Name="HourHeader" TimeStepSize="Hour" MinimumPixelsBetweenLabels="200" />
-					<controls:TimeLineHeaderFactory Name="QuarterHeader" StepSize="00:15:00" MinimumPixelsBetweenLabels="200" />
+					<controls:AbstractTimeLineHeaderFactory Name="YearHeader" TimeStepSize="Year" MinimumPixelsBetweenLabels="200" />
+					<controls:AbstractTimeLineHeaderFactory Name="MonthHeader" TimeStepSize="Month" MinimumPixelsBetweenLabels="200" />
+					<controls:AbstractTimeLineHeaderFactory Name="WeekHeader" StepSize="7.00:00:00" MinimumPixelsBetweenLabels="200" />
+					<controls:AbstractTimeLineHeaderFactory Name="DayHeader" TimeStepSize="Day" MinimumPixelsBetweenLabels="200" />
+					<controls:AbstractTimeLineHeaderFactory Name="DayQuarterHeader" StepSize="06:00:00" MinimumPixelsBetweenLabels="200" />
+					<controls:AbstractTimeLineHeaderFactory Name="HourHeader" TimeStepSize="Hour" MinimumPixelsBetweenLabels="200" />
+					<controls:AbstractTimeLineHeaderFactory Name="QuarterHeader" StepSize="00:15:00" MinimumPixelsBetweenLabels="200" />
+					<!-- Breadcrumb labels underneath headers. -->
+					<controls:TimeLineBreadcrumbFactory Name="YearBreadcrumbs" TimeStepSize="Year" MinimumPixelsBetweenLabels="200" />
+					<controls:TimeLineBreadcrumbFactory Name="MonthBreadcrumbs" TimeStepSize="Month" MinimumPixelsBetweenLabels="200" />
+					<controls:TimeLineBreadcrumbFactory Name="WeekBreadcrumbs" StepSize="7.00:00:00" MinimumPixelsBetweenLabels="200" />
+					<controls:TimeLineBreadcrumbFactory Name="DayBreadcrumbs" TimeStepSize="Day" MinimumPixelsBetweenLabels="200" />
+					<controls:TimeLineBreadcrumbFactory Name="DayQuarterBreadcrumbs" StepSize="06:00:00" MinimumPixelsBetweenLabels="200" />
+					<controls:TimeLineBreadcrumbFactory Name="HourBreadcrumbs" TimeStepSize="Hour" MinimumPixelsBetweenLabels="200" />
+					<controls:TimeLineBreadcrumbFactory Name="QuarterBreadcrumbs" StepSize="00:15:00" MinimumPixelsBetweenLabels="200" />
 					<!-- Fixed elements. -->
 					<controls:TimeLineLabelCollection>
 						<controls:TimeIndicator />
@@ -278,9 +286,41 @@
 									<Binding Path="DominantTickFactory" RelativeSource="{RelativeSource AncestorType=controls:TimeLine}" />
 								</MultiBinding>
 							</TextBlock.Text>
-							<TextBlock.RenderTransform>
-								<TranslateTransform X="0" />
-							</TextBlock.RenderTransform>
+						</TextBlock>
+					</Border>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+
+	</Style>
+
+	<!-- TimeLineBreadcrumb -->
+	<Style TargetType="{x:Type controls:TimeLineBreadcrumb}" BasedOn="{StaticResource {x:Type controls:TimeLineItem}}">
+
+		<Setter Property="FontSize" Value="30" />
+		<Setter Property="Padding" Value="10, 0, 10, 0" />
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="{x:Type controls:TimeLineBreadcrumb}">
+					<Border>
+						<TextBlock
+							Margin="0, 60, 0, 0"
+							Padding="{TemplateBinding Padding}"
+							Foreground="{TemplateBinding Foreground}">
+							<TextBlock.Visibility>
+								<MultiBinding Converter="{converters:EqualsConverter IfTrue={x:Static Visibility.Visible}, IfFalse={x:Static Visibility.Collapsed}}">
+									<Binding Path="DominantBreadcrumbFactory" RelativeSource="{RelativeSource AncestorType=controls:TimeLine}" />
+									<Binding Path="FactoryName" RelativeSource="{RelativeSource TemplatedParent}" />
+								</MultiBinding>
+							</TextBlock.Visibility>
+							<TextBlock.Text>
+								<MultiBinding Converter="{StaticResource TickLabelConverter}">
+									<Binding Path="Occurance" RelativeSource="{RelativeSource TemplatedParent}" />
+									<Binding Path="Interval" RelativeSource="{RelativeSource TemplatedParent}" />
+									<Binding Path="FactoryName" RelativeSource="{RelativeSource TemplatedParent}" />
+									<Binding Path="DominantTickFactory" RelativeSource="{RelativeSource AncestorType=controls:TimeLine}" />
+								</MultiBinding>
+							</TextBlock.Text>
 						</TextBlock>
 					</Border>
 				</ControlTemplate>

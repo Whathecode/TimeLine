@@ -3,11 +3,11 @@
 
 namespace Whathecode.AxesPanels.Controls
 {
-	public class AbstractTimeLineHeaderFactory : AbstractTimeLinePushLabelFactory
+	public class TimeLineBreadcrumbFactory : AbstractTimeLinePushLabelFactory
 	{
 		protected override FrameworkElement CreateLabel()
 		{
-			return new TimeLineHeader
+			return new TimeLineBreadcrumb
 			{
 				Interval = MaximumLabelSize,
 				FactoryName = Name

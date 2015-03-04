@@ -14,7 +14,8 @@ namespace Whathecode.AxesPanels.Controls
 		{
 			LabelFactories,
 			DominantTickFactory,
-			DominantHeaderFactory
+			DominantHeaderFactory,
+			DominantBreadcrumbFactory
 		}
 
 
@@ -23,6 +24,7 @@ namespace Whathecode.AxesPanels.Controls
 		public static readonly DependencyProperty LabelFactoriesProperty = Factory[ TimeLineProperties.LabelFactories ];
 		public static readonly DependencyProperty DominantTickFactoryProperty = Factory[ TimeLineProperties.DominantTickFactory ];
 		public static readonly DependencyProperty DominantHeaderFactoryProperty = Factory[ TimeLineProperties.DominantHeaderFactory ];
+		public static readonly DependencyProperty DominantBreadcrumbFactoryProperty = Factory[ TimeLineProperties.DominantBreadcrumbFactory ];
 
 
 		[DependencyProperty( TimeLineProperties.LabelFactories )]
@@ -44,6 +46,13 @@ namespace Whathecode.AxesPanels.Controls
 		{
 			get { return (string)Factory.GetValue( this, TimeLineProperties.DominantHeaderFactory ); }
 			private set { Factory.SetValue( this,TimeLineProperties.DominantHeaderFactory, value ); }
+		}
+
+		[DependencyProperty( TimeLineProperties.DominantBreadcrumbFactory )]
+		public string DominantBreadcrumbFactory
+		{
+			get { return (string)Factory.GetValue( this, TimeLineProperties.DominantBreadcrumbFactory ); }
+			private set { Factory.SetValue( this,TimeLineProperties.DominantBreadcrumbFactory, value ); }
 		}
 
 
@@ -71,12 +80,27 @@ namespace Whathecode.AxesPanels.Controls
 					var visibleTicks = LabelFactories.OfType<TimeLineTickFactory>().Where( f => !f.MinimumPixelsExceeded ).ToList();
 					DominantTickFactory = visibleTicks.Count == 0 ? "" : visibleTicks.MinBy( f => f.MaximumLabelSize ).Name;
 
-					// Get the smallest interval which is too large to fit the screen vertically.
+					// Get dominant header and breadcrumb factories.
 					var dontFit = LabelFactories
-						.OfType<TimeLineHeaderFactory>()
+						.OfType<AbstractTimeLineHeaderFactory>()  // Get the smallest interval which is too large to fit the screen vertically.
 						.Where( f => ( (double)f.MaximumLabelSize.Ticks / VisibleInterval.Size.Ticks ) * ActualWidth > ActualHeight )
 						.ToList();
-					DominantHeaderFactory = dontFit.Count == 0 ? "" : dontFit.MinBy( f => f.MaximumLabelSize ).Name;
+					AbstractTimeLineHeaderFactory currentHeaderFactory = dontFit.Count == 0 ? null : dontFit.MinBy( f => f.MaximumLabelSize );
+					if ( currentHeaderFactory != null )
+					{
+						DominantHeaderFactory = currentHeaderFactory.Name;
+
+						// The dominant breadcrumb factory is the first factory bigger than the dominant header factory.
+						TimeLineBreadcrumbFactory breadcrumbFactory = LabelFactories
+							.OfType<TimeLineBreadcrumbFactory>()
+							.OrderBy( f => f.MaximumLabelSize )
+							.FirstOrDefault( f => f.MaximumLabelSize > currentHeaderFactory.MaximumLabelSize );
+						DominantBreadcrumbFactory = breadcrumbFactory == null ? "" : breadcrumbFactory.Name;
+					}
+					else
+					{
+						DominantHeaderFactory = "";
+					}
 				}
 			};
 		}
