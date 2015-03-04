@@ -263,6 +263,11 @@ namespace Whathecode.AxesPanels
 			DefaultStyleKeyProperty.OverrideMetadata( Type, new FrameworkPropertyMetadata( Type ) );
 		}
 
+		protected AxesPanel()
+		{
+			SizeChanged += ( sender, args ) => UpdateFactoriesVisibleInterval();
+		}
+
 
 		protected override Size MeasureOverride( Size availableSize )
 		{
@@ -334,6 +339,29 @@ namespace Whathecode.AxesPanels
 			return finalSize;
 		}
 
+		[DependencyPropertyChanged( AxesPanelBinding.VisibleIntervalX )]
+		static void OnVisibleIntervalXChanged( DependencyObject dependencyObject, DependencyPropertyChangedEventArgs args )
+		{
+			var panel = (AxesPanel<TX, TXSize, TY, TYSize>)dependencyObject;
+			panel.UpdateFactoriesVisibleInterval();
+		}
+		[DependencyPropertyChanged( AxesPanelBinding.VisibleIntervalY )]
+		static void OnVisibleIntervalYChanged( DependencyObject dependencyObject, DependencyPropertyChangedEventArgs args )
+		{
+			var panel = (AxesPanel<TX, TXSize, TY, TYSize>)dependencyObject;
+			panel.UpdateFactoriesVisibleInterval();
+		}
+		void UpdateFactoriesVisibleInterval()
+		{
+			if ( LabelFactories != null )
+			{
+				foreach ( var factory in LabelFactories.Reverse() ) // Factories need to be updated in reverse order, since the later ones have precedence.
+				{
+					factory.VisibleIntervalChanged( new AxesIntervals<TX, TXSize, TY, TYSize>( VisibleIntervalX, VisibleIntervalY ), new Size( ActualWidth, ActualHeight ) );
+				}
+			}
+		}
+
 		double IntervalSize<T, TSize>( Interval<T, TSize> visible, TSize desiredSize, double visiblePixels )
 			where T : IComparable<T>
 		{
@@ -374,12 +402,11 @@ namespace Whathecode.AxesPanels
 				foreach ( var factory in oldCollection )
 				{
 					// ReSharper disable once AccessToForEachVariableInClosure
-					factory.ForEach( l => panel.RemoveLabel( factory, l ) );
+					factory.ForEach( l => panel.RemoveLabel( l ) );
 				}
 			}
 
 			newCollection.CollectionChanged += panel.OnLabelFactoriesChanged;
-			panel.UpdateLabelFactories();
 			panel._labelFactoryGroups = newCollection.GroupBy( f => f.OverrideGroup );
 			foreach ( var factory in newCollection.Reverse() ) // Factories need to be updated in reverse order, since the later ones have precedence.
 			{
@@ -404,12 +431,10 @@ namespace Whathecode.AxesPanels
 					e.OldItems.Cast<AbstractAxesLabelCollection<TX, TXSize, TY, TYSize>>().ForEach( f =>
 					{
 						f.CollectionChanged -= OnLabelsChanged;
-						f.ForEach( l => RemoveLabel( f, l ) );
+						f.ForEach( l => RemoveLabel( l ) );
 					} );
 					break;
 			}
-
-			UpdateLabelFactories();
 		}
 		void OnLabelsChanged( object sender, NotifyCollectionChangedEventArgs e )
 		{
@@ -421,11 +446,13 @@ namespace Whathecode.AxesPanels
 					e.NewItems.Cast<FrameworkElement>().ForEach( l => AddLabel( factory, l ) );
 					break;
 				case NotifyCollectionChangedAction.Remove:
-					e.OldItems.Cast<FrameworkElement>().ForEach( l => RemoveLabel( factory, l ) );
+					e.OldItems.Cast<FrameworkElement>().ForEach( l => RemoveLabel( l ) );
 					break;
 			}
 		}
 
+		readonly Dictionary<FrameworkElement, AbstractAxesLabelCollection<TX, TXSize, TY, TYSize>> _labelAssociations
+			= new Dictionary<FrameworkElement, AbstractAxesLabelCollection<TX, TXSize, TY, TYSize>>();
 		void AddLabel( AbstractAxesLabelCollection<TX, TXSize, TY, TYSize> hostFactory, FrameworkElement label )
 		{
 			Func<FrameworkElement, Tuple<TX, TY>> getPosition = l => Tuple.Create( (TX)l.GetValue( XProperty ), (TY)l.GetValue( YProperty ) );
@@ -456,38 +483,33 @@ namespace Whathecode.AxesPanels
 				var index = LabelFactories.IndexOf( hostFactory );
 				label.SetValue( ZIndexProperty, index );
 
+				_labelAssociations[ label ] = hostFactory;
+				label.Loaded += LabelOnLoaded;
+				label.SizeChanged += LabelOnSizeChanged;
 				Children.Add( label );
 			}
 		}
 
-		void RemoveLabel( AbstractAxesLabelCollection<TX, TXSize, TY, TYSize> hostFactory, FrameworkElement label )
+		void RemoveLabel( FrameworkElement label )
 		{
+			label.Loaded -= LabelOnLoaded;
+			label.SizeChanged -= LabelOnSizeChanged;
+			_labelAssociations.Remove( label );
 			Children.Remove( label );
 		}
 
-		[DependencyPropertyChanged( AxesPanelBinding.VisibleIntervalX )]
-		static void OnVisibleIntervalXChanged( DependencyObject dependencyObject, DependencyPropertyChangedEventArgs args )
+		void LabelOnLoaded( object sender, RoutedEventArgs routedEventArgs )
 		{
-			var panel = (AxesPanel<TX, TXSize, TY, TYSize>)dependencyObject;
-			panel.UpdateLabelFactories();
+			var label = (FrameworkElement)sender;
+			AbstractAxesLabelCollection<TX, TXSize, TY, TYSize> factory = _labelAssociations[ label ];
+			factory.LabelResized( label, new AxesIntervals<TX, TXSize, TY, TYSize>( VisibleIntervalX, VisibleIntervalY ), new Size( ActualWidth, ActualHeight ) );
 		}
-		[DependencyPropertyChanged( AxesPanelBinding.VisibleIntervalY )]
-		static void OnVisibleIntervalYChanged( DependencyObject dependencyObject, DependencyPropertyChangedEventArgs args )
-		{	
-			var panel = (AxesPanel<TX, TXSize, TY, TYSize>)dependencyObject;
-			panel.UpdateLabelFactories();
-		}
-		void UpdateLabelFactories()
+
+		void LabelOnSizeChanged( object sender, SizeChangedEventArgs sizeChangedEventArgs )
 		{
-			if ( LabelFactories != null )
-			{
-				foreach ( var factory in LabelFactories.Reverse() ) // Factories need to be updated in reverse order, since the later ones have precedence.
-				{
-					factory.VisibleIntervalChanged(
-						new AxesIntervals<TX, TXSize, TY, TYSize>( VisibleIntervalX, VisibleIntervalY ),
-						new Size( ActualWidth, ActualHeight ) );
-				}
-			}
+			var label = (FrameworkElement)sender;
+			AbstractAxesLabelCollection<TX, TXSize, TY, TYSize> factory = _labelAssociations[ label ];
+			factory.LabelResized( label, new AxesIntervals<TX, TXSize, TY, TYSize>( VisibleIntervalX, VisibleIntervalY ), new Size( ActualWidth, ActualHeight ) );
 		}
 
 		protected Interval<double> ConvertToInternalIntervalX( Interval<TX, TXSize> interval )

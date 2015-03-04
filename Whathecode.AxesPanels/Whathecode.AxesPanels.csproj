@@ -66,8 +66,10 @@
     <Compile Include="Controls\AbstractTickLabelConverter.cs" />
     <Compile Include="Controls\TickLabelConverter.cs" />
     <Compile Include="Controls\AbstractTimeIntervalLabelFactory.cs" />
+    <Compile Include="Controls\TimeLineHeader.cs" />
     <Compile Include="Controls\TimeLineContextLabel.cs" />
     <Compile Include="Controls\TimeLineContextLabelFactory.cs" />
+    <Compile Include="Controls\TimeLineHeaderFactory.cs" />
     <Compile Include="Controls\TimeLineTickFactory.cs" />
     <Compile Include="Controls\TimeLineTick.cs" />
     <Compile Include="Controls\TimeLineLabelCollection.cs" />

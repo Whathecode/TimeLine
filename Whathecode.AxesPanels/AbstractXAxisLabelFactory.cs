@@ -37,9 +37,7 @@ namespace Whathecode.AxesPanels
 		protected override IEnumerable<Tuple<TX, TY>> GetPositions( AxesIntervals<TX, TXSize, TY, TYSize> intervals, Size panelSize )
 		{
 			// When not enough pixels in between labels, do not show any labels.
-			double intervalSize = Interval<TX, TXSize>.ConvertSizeToDouble( intervals.IntervalX.Size );
-			double stepSize = Interval<TX, TXSize>.ConvertSizeToDouble( MaximumLabelSize );
-			double pixelsBetween = panelSize.Width * ( stepSize / intervalSize );
+			double pixelsBetween = SizeToPixels( MaximumLabelSize, intervals, panelSize );
 			if ( pixelsBetween < MinimumPixelsBetweenLabels )
 			{
 				MinimumPixelsExceeded = true;
@@ -48,6 +46,20 @@ namespace Whathecode.AxesPanels
 
 			MinimumPixelsExceeded = false;
 			return GetXValues( intervals ).Select( x => new Tuple<TX, TY>( x, FixedY ) );
+		}
+
+		protected static double SizeToPixels( TXSize size, AxesIntervals<TX, TXSize, TY, TYSize> intervals, Size panelSize )
+		{
+			double intervalSize = Interval<TX, TXSize>.ConvertSizeToDouble( intervals.IntervalX.Size );
+			double requestedSize = Interval<TX, TXSize>.ConvertSizeToDouble( size );
+			return panelSize.Width * ( requestedSize / intervalSize );
+		}
+
+		protected static TXSize PixelsToSize( double pixels, AxesIntervals<TX, TXSize, TY, TYSize> intervals, Size panelSize )
+		{
+			double intervalSize = Interval<TX, TXSize>.ConvertSizeToDouble( intervals.IntervalX.Size );
+			double size = ( pixels / panelSize.Width ) * intervalSize;
+			return Interval<TX, TXSize>.ConvertDoubleToSize( size );
 		}
 
 		protected abstract IEnumerable<TX> GetXValues( AxesIntervals<TX, TXSize, TY, TYSize> intervals );

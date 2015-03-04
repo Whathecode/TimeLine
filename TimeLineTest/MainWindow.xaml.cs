@@ -5,6 +5,7 @@ using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using Whathecode.AxesPanels;
 using Whathecode.AxesPanels.Controls;
 using Whathecode.System.Arithmetic.Range;
 using Whathecode.System.ComponentModel.NotifyPropertyFactory;
@@ -57,8 +58,9 @@ namespace TimeLineTest
 			_properties = new NotifyPropertyFactory<Properties>( this, () => PropertyChanged );
 			Items = new ObservableCollection<object>();
 			CurrentTime = now;
-			TimeSpan zoom = TimeSpan.FromDays( 1 );
+			TimeSpan zoom = TimeSpan.FromMinutes( 5 );
 			VisibleInterval = new TimeInterval( CurrentTime - zoom, CurrentTime + zoom );
+			//VisibleInterval = new Interval<DateTime, TimeSpan>( new DateTime( 2015, 3, 3, 13, 0, 0 ),  new DateTime( 2015, 3, 3, 14, 0, 0 ) );
 
 			Timer update = new Timer( 100 );
 			update.Elapsed += ( sender, args ) =>
@@ -84,6 +86,7 @@ namespace TimeLineTest
 				},
 				Occurance = now
 			};
+			test.SetValue( TimePanel.YProperty, 50.0 );
 			Items.Add( test );
 		}
 	}

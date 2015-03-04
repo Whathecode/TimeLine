@@ -15,12 +15,12 @@ namespace Whathecode.AxesPanels.Controls
 			};
 		}
 
-		protected override void InitializeLabel( PositionedElement positioned, AxesIntervals<DateTime, TimeSpan, double, double> visible )
+		protected override void InitializeLabel( PositionedElement positioned, AxesIntervals<DateTime, TimeSpan, double, double> visible, Size panelSize )
 		{
 			// Nothing to do.
 		}
 
-		protected override void UpdateLabel( PositionedElement label, AxesIntervals<DateTime, TimeSpan, double, double> visible )
+		protected override void UpdateLabel( PositionedElement label, AxesIntervals<DateTime, TimeSpan, double, double> visible, Size panelSize )
 		{
 			// Nothing to do.
 		}

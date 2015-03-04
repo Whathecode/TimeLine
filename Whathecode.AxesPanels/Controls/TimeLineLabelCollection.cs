@@ -10,5 +10,10 @@ namespace Whathecode.AxesPanels.Controls
 		{
 			// Nothing to do.
 		}
+
+		internal override void LabelResized( FrameworkElement label, AxesIntervals<DateTime, TimeSpan, double, double> visible, Size panelSize )
+		{
+			// Nothing to do.
+		}
 	}
 }

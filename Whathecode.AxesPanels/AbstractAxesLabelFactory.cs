@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
 using System.Windows.Media;
 using Whathecode.System.Arithmetic.Range;
@@ -29,6 +30,11 @@ namespace Whathecode.AxesPanels
 
 
 		readonly List<PositionedElement> _visibleLabels = new List<PositionedElement>();
+		protected IReadOnlyList<PositionedElement> VisibleLabels
+		{
+			get {  return _visibleLabels; }
+		}
+
 		readonly Stack<FrameworkElement> _availableLabels = new Stack<FrameworkElement>(); 
 
 
@@ -50,11 +56,12 @@ namespace Whathecode.AxesPanels
 
 			// Free up labels which are no longer visible, and update those already positioned.
 			var toRemove = new List<PositionedElement>();
+			var toUpdate = new List<PositionedElement>();
 			foreach ( var positioned in _visibleLabels )
 			{
 				if ( toPosition.Contains( positioned.Position ) )
 				{
-					UpdateLabel( positioned, visible );
+					toUpdate.Add( positioned );
 					toPosition.Remove( positioned.Position );
 				}
 				else
@@ -65,8 +72,10 @@ namespace Whathecode.AxesPanels
 				}
 			}
 			toRemove.ForEach( r => _visibleLabels.Remove( r ) );
+			toUpdate.ForEach( u => UpdateLabel( u, visible, panelSize ) );
 
 			// Position new labels.
+			var toInitialize = new List<PositionedElement>();
 			foreach ( var position in toPosition )
 			{
 				// Create a new label when needed, or retrieve existing one.
@@ -86,8 +95,9 @@ namespace Whathecode.AxesPanels
 
 				var positioned = new PositionedElement( toPlace, position );
 				_visibleLabels.Add( positioned );
-				InitializeLabel( positioned, visible );
+				toInitialize.Add( positioned );
 			}
+			toInitialize.ForEach( i => InitializeLabel( i, visible, panelSize ) );
 		}
 
 		/// <summary>
@@ -108,11 +118,17 @@ namespace Whathecode.AxesPanels
 		/// <summary>
 		///   Initializes a label which has just been repositioned at a certain positioned.
 		/// </summary>
-		protected abstract void InitializeLabel( PositionedElement positioned, AxesIntervals<TX, TXSize, TY, TYSize> visible );
+		protected abstract void InitializeLabel( PositionedElement positioned, AxesIntervals<TX, TXSize, TY, TYSize> visible, Size panelSize );
 
 		/// <summary>
 		///   Called for already positioned elements which might potentionally need to be updated based on a new visible interval.
 		/// </summary>
-		protected abstract void UpdateLabel( PositionedElement label, AxesIntervals<TX, TXSize, TY, TYSize> visible );
+		protected abstract void UpdateLabel( PositionedElement label, AxesIntervals<TX, TXSize, TY, TYSize> visible, Size panelSize );
+
+		internal override void LabelResized( FrameworkElement label, AxesIntervals<TX, TXSize, TY, TYSize> visible, Size panelSize )
+		{
+			var positioned = _visibleLabels.First( v => v.Element == label );
+			UpdateLabel( positioned, visible, panelSize );
+		}
 	}
 }

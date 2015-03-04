@@ -75,10 +75,18 @@
 					<controls:TimeLineTickFactory Name="Weeks" StepSize="7.00:00:00" MinimumPixelsBetweenLabels="60" OverrideGroup="Ticks" />
 					<controls:TimeLineTickFactory Name="Months" TimeStepSize="Month" MinimumPixelsBetweenLabels="50" OverrideGroup="Ticks" />
 					<controls:TimeLineTickFactory Name="Years" TimeStepSize="Year" MinimumPixelsBetweenLabels="60" OverrideGroup="Ticks" />
-					<!-- Additional context labels. -->
+					<!-- Additional context labels at bottom. -->
 					<controls:TimeLineContextLabelFactory Name="DayContext" TimeStepSize="Day" MinimumPixelsBetweenLabels="50" FixedY="100" />
 					<controls:TimeLineContextLabelFactory Name="MonthContext" TimeStepSize="Month" MinimumPixelsBetweenLabels="100" FixedY="100" />
 					<controls:TimeLineContextLabelFactory Name="YearContext" TimeStepSize="Year" MinimumPixelsBetweenLabels="100" FixedY="100" />
+					<!-- Header labels. -->
+					<controls:TimeLineHeaderFactory Name="YearHeader" TimeStepSize="Year" MinimumPixelsBetweenLabels="200" />
+					<controls:TimeLineHeaderFactory Name="MonthHeader" TimeStepSize="Month" MinimumPixelsBetweenLabels="200" />
+					<controls:TimeLineHeaderFactory Name="WeekHeader" StepSize="7.00:00:00" MinimumPixelsBetweenLabels="200" />
+					<controls:TimeLineHeaderFactory Name="DayHeader" TimeStepSize="Day" MinimumPixelsBetweenLabels="200" />
+					<controls:TimeLineHeaderFactory Name="DayQuarterHeader" StepSize="06:00:00" MinimumPixelsBetweenLabels="200" />
+					<controls:TimeLineHeaderFactory Name="HourHeader" TimeStepSize="Hour" MinimumPixelsBetweenLabels="200" />
+					<controls:TimeLineHeaderFactory Name="QuarterHeader" StepSize="00:15:00" MinimumPixelsBetweenLabels="200" />
 					<!-- Fixed elements. -->
 					<controls:TimeLineLabelCollection>
 						<controls:TimeIndicator />
@@ -176,7 +184,7 @@
 	<Style TargetType="{x:Type controls:TimeLineTick}" BasedOn="{StaticResource {x:Type controls:TimeLineItem}}">
 
 		<Setter Property="Occurance" Value="{Binding Path=(axes:TimePanel.X)}" />
-		<Setter Property="StrokeThickness" Value="1.5" />
+		<Setter Property="StrokeThickness" Value="1.8" />
 		<Setter Property="axes:TimePanel.SizeX" Value="{Binding Interval}" />
 		<Setter Property="axes:TimePanel.SizeY" Value="100" />
 		<Setter Property="Padding" Value="5, 0, 0, 1" />
@@ -195,19 +203,19 @@
 							Stroke="{TemplateBinding Stroke}"
 							StrokeThickness="{TemplateBinding StrokeThickness}"
 							Y2="{TemplateBinding ActualWidth}" />
-						<Label
+						<TextBlock
 							VerticalAlignment="Bottom"
 							Padding="{TemplateBinding Padding}"
 							Foreground="{TemplateBinding Foreground}">
-							<Label.Content>
+							<TextBlock.Text>
 								<MultiBinding Converter="{StaticResource TickLabelConverter}">
 									<Binding Path="Occurance" RelativeSource="{RelativeSource TemplatedParent}" />
 									<Binding Path="Interval" RelativeSource="{RelativeSource TemplatedParent}" />
 									<Binding Path="FactoryName" RelativeSource="{RelativeSource TemplatedParent}" />
-									<Binding Path="DominantLabelFactory" RelativeSource="{RelativeSource AncestorType=controls:TimeLine}" />
+									<Binding Path="DominantTickFactory" RelativeSource="{RelativeSource AncestorType=controls:TimeLine}" />
 								</MultiBinding>
-							</Label.Content>
-						</Label>
+							</TextBlock.Text>
+						</TextBlock>
 					</Grid>
 				</ControlTemplate>
 			</Setter.Value>
@@ -224,23 +232,61 @@
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="{x:Type controls:TimeLineContextLabel}">
-					<Label
+					<TextBlock
 						Margin="0, 0, 0, 25"
 						Padding="{TemplateBinding Padding}"
 						Foreground="{TemplateBinding Foreground}">
-						<Label.Content>
+						<TextBlock.Text>
 							<MultiBinding Converter="{StaticResource TickLabelConverter}">
 								<Binding Path="Occurance" RelativeSource="{RelativeSource TemplatedParent}" />
 								<Binding Path="Interval" RelativeSource="{RelativeSource TemplatedParent}" />
 								<Binding Path="FactoryName" RelativeSource="{RelativeSource TemplatedParent}" />
-								<Binding Path="DominantLabelFactory" RelativeSource="{RelativeSource AncestorType=controls:TimeLine}" />
+								<Binding Path="DominantTickFactory" RelativeSource="{RelativeSource AncestorType=controls:TimeLine}" />
 							</MultiBinding>
-						</Label.Content>
-					</Label>
+						</TextBlock.Text>
+					</TextBlock>
 				</ControlTemplate>
 			</Setter.Value>
 		</Setter>
 		
+	</Style>
+	
+	<!-- TimeLineHeader -->
+	<Style TargetType="{x:Type controls:TimeLineHeader}" BasedOn="{StaticResource {x:Type controls:TimeLineItem}}">
+
+		<Setter Property="FontSize" Value="70" />
+		<Setter Property="Padding" Value="10, 0, 10, 0" />
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="{x:Type controls:TimeLineHeader}">
+					<Border>
+						<TextBlock
+							Margin="0, -15, 0, 0"
+							Padding="{TemplateBinding Padding}"
+							Foreground="{TemplateBinding Foreground}">
+							<TextBlock.Visibility>
+								<MultiBinding Converter="{converters:EqualsConverter IfTrue={x:Static Visibility.Visible}, IfFalse={x:Static Visibility.Collapsed}}">
+									<Binding Path="DominantHeaderFactory" RelativeSource="{RelativeSource AncestorType=controls:TimeLine}" />
+									<Binding Path="FactoryName" RelativeSource="{RelativeSource TemplatedParent}" />
+								</MultiBinding>
+							</TextBlock.Visibility>
+							<TextBlock.Text>
+								<MultiBinding Converter="{StaticResource TickLabelConverter}">
+									<Binding Path="Occurance" RelativeSource="{RelativeSource TemplatedParent}" />
+									<Binding Path="Interval" RelativeSource="{RelativeSource TemplatedParent}" />
+									<Binding Path="FactoryName" RelativeSource="{RelativeSource TemplatedParent}" />
+									<Binding Path="DominantTickFactory" RelativeSource="{RelativeSource AncestorType=controls:TimeLine}" />
+								</MultiBinding>
+							</TextBlock.Text>
+							<TextBlock.RenderTransform>
+								<TranslateTransform X="0" />
+							</TextBlock.RenderTransform>
+						</TextBlock>
+					</Border>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+
 	</Style>
 
 </ResourceDictionary>

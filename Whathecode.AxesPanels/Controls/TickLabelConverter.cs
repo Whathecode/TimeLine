@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using Whathecode.System.Extensions;
 
 
@@ -31,6 +32,26 @@ namespace Whathecode.AxesPanels.Controls
 
 		protected override string FormatLabel( DateTime occurance, TimeSpan interval, string factoryName, string dominantFactory )
 		{
+			// Header labels.
+			switch ( factoryName )
+			{
+				case "YearHeader":
+					return occurance.ToString( "yyyy" );
+				case "MonthHeader":
+					return occurance.ToString( "MMMM" );
+				case "WeekHeader":
+					return "Week " + CultureInfo.CurrentCulture.Calendar.GetWeekOfYear( occurance, CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday );
+				case "DayHeader":
+					return occurance.ToString( @"dddd d\t\h" );
+				case "DayQuarterHeader":
+					return occurance.Hour == 0 ? "Midnight" : occurance.Hour == 6 ? "Morning" : occurance.Hour == 12 ? "Noon" : "Evening";
+				case "HourHeader":
+					return occurance.ToString( "H:00" );
+				case "QuarterHeader":
+					return occurance.ToString( "HH:mm" );
+			}
+
+			// For the following labels, dominant factory is required.
 			if ( dominantFactory == "" )
 			{
 				return "";
