@@ -5,11 +5,11 @@ using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
-using Whathecode.AxesPanels;
-using Whathecode.AxesPanels.Controls;
 using Whathecode.System.Arithmetic.Range;
 using Whathecode.System.ComponentModel.NotifyPropertyFactory;
 using Whathecode.System.ComponentModel.NotifyPropertyFactory.Attributes;
+using Whathecode.System.Windows.Controls;
+using Whathecode.TimeLine;
 
 
 namespace TimeLineTest
