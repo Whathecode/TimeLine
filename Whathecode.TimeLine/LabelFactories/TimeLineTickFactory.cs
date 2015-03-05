@@ -3,7 +3,7 @@ using System.Windows;
 using Whathecode.System.Windows.Controls;
 
 
-namespace Whathecode.TimeLine
+namespace Whathecode.TimeLine.LabelFactories
 {
 	public class TimeLineTickFactory : AbstractTimeIntervalLabelFactory
 	{

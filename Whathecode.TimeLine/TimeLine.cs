@@ -5,6 +5,7 @@ using Whathecode.System.Linq;
 using Whathecode.System.Windows.Controls;
 using Whathecode.System.Windows.DependencyPropertyFactory;
 using Whathecode.System.Windows.DependencyPropertyFactory.Attributes;
+using Whathecode.TimeLine.LabelFactories;
 
 
 namespace Whathecode.TimeLine

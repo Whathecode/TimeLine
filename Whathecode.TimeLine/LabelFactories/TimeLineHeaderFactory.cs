@@ -1,7 +1,7 @@
 ﻿using System.Windows;
 
 
-namespace Whathecode.TimeLine
+namespace Whathecode.TimeLine.LabelFactories
 {
 	public class AbstractTimeLineHeaderFactory : AbstractTimeLinePushLabelFactory
 	{

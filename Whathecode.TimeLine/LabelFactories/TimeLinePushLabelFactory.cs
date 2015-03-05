@@ -5,7 +5,7 @@ using Whathecode.System.Linq;
 using Whathecode.System.Windows.Controls;
 
 
-namespace Whathecode.TimeLine
+namespace Whathecode.TimeLine.LabelFactories
 {
 	public abstract class AbstractTimeLinePushLabelFactory : AbstractTimeIntervalLabelFactory
 	{

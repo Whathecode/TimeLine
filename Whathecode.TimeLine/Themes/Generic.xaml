@@ -1,12 +1,12 @@
 ﻿<ResourceDictionary
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-	xmlns:axes="clr-namespace:Whathecode.AxesPanels"
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	xmlns:converters="clr-namespace:Whathecode.System.Windows.Data;assembly=Whathecode.PresentationFramework"
 	xmlns:wtc="clr-namespace:Whathecode.System.Windows.Controls;assembly=Whathecode.PresentationFramework"
 	xmlns:controls="clr-namespace:Whathecode.TimeLine"
+	xmlns:factories="clr-namespace:Whathecode.TimeLine.LabelFactories"
 	mc:Ignorable="d">
 	
 	<!-- TimeControl -->
@@ -67,40 +67,40 @@
 		
 		<Setter Property="LabelFactories">
 			<Setter.Value>
-				<controls:TimeLineLabelFactories>
+				<factories:TimeLineLabelFactories>
 					<!-- Ticks, from quarters to years. -->
-					<controls:TimeLineTickFactory Name="Quarters" StepSize="00:15:00" MinimumPixelsBetweenLabels="60" OverrideGroup="Ticks" />
-					<controls:TimeLineTickFactory Name="Hours" TimeStepSize="Hour" MinimumPixelsBetweenLabels="60" OverrideGroup="Ticks" />
-					<controls:TimeLineTickFactory Name="DayQuarters" StepSize="06:00:00" MinimumPixelsBetweenLabels="60" OverrideGroup="Ticks" />
-					<controls:TimeLineTickFactory Name="Days" TimeStepSize="Day" MinimumPixelsBetweenLabels="50" OverrideGroup="Ticks" />
-					<controls:TimeLineTickFactory Name="Weeks" StepSize="7.00:00:00" MinimumPixelsBetweenLabels="60" OverrideGroup="Ticks" />
-					<controls:TimeLineTickFactory Name="Months" TimeStepSize="Month" MinimumPixelsBetweenLabels="50" OverrideGroup="Ticks" />
-					<controls:TimeLineTickFactory Name="Years" TimeStepSize="Year" MinimumPixelsBetweenLabels="60" OverrideGroup="Ticks" />
+					<factories:TimeLineTickFactory Name="Quarters" StepSize="00:15:00" MinimumPixelsBetweenLabels="60" OverrideGroup="Ticks" />
+					<factories:TimeLineTickFactory Name="Hours" TimeStepSize="Hour" MinimumPixelsBetweenLabels="60" OverrideGroup="Ticks" />
+					<factories:TimeLineTickFactory Name="DayQuarters" StepSize="06:00:00" MinimumPixelsBetweenLabels="60" OverrideGroup="Ticks" />
+					<factories:TimeLineTickFactory Name="Days" TimeStepSize="Day" MinimumPixelsBetweenLabels="50" OverrideGroup="Ticks" />
+					<factories:TimeLineTickFactory Name="Weeks" StepSize="7.00:00:00" MinimumPixelsBetweenLabels="60" OverrideGroup="Ticks" />
+					<factories:TimeLineTickFactory Name="Months" TimeStepSize="Month" MinimumPixelsBetweenLabels="50" OverrideGroup="Ticks" />
+					<factories:TimeLineTickFactory Name="Years" TimeStepSize="Year" MinimumPixelsBetweenLabels="60" OverrideGroup="Ticks" />
 					<!-- Additional context labels at bottom. -->
-					<controls:TimeLineContextLabelFactory Name="DayContext" TimeStepSize="Day" MinimumPixelsBetweenLabels="50" FixedY="100" />
-					<controls:TimeLineContextLabelFactory Name="MonthContext" TimeStepSize="Month" MinimumPixelsBetweenLabels="100" FixedY="100" />
-					<controls:TimeLineContextLabelFactory Name="YearContext" TimeStepSize="Year" MinimumPixelsBetweenLabels="100" FixedY="100" />
+					<factories:TimeLineContextLabelFactory Name="DayContext" TimeStepSize="Day" MinimumPixelsBetweenLabels="50" FixedY="100" />
+					<factories:TimeLineContextLabelFactory Name="MonthContext" TimeStepSize="Month" MinimumPixelsBetweenLabels="100" FixedY="100" />
+					<factories:TimeLineContextLabelFactory Name="YearContext" TimeStepSize="Year" MinimumPixelsBetweenLabels="100" FixedY="100" />
 					<!-- Header labels. -->
-					<controls:AbstractTimeLineHeaderFactory Name="YearHeader" TimeStepSize="Year" MinimumPixelsBetweenLabels="200" />
-					<controls:AbstractTimeLineHeaderFactory Name="MonthHeader" TimeStepSize="Month" MinimumPixelsBetweenLabels="200" />
-					<controls:AbstractTimeLineHeaderFactory Name="WeekHeader" StepSize="7.00:00:00" MinimumPixelsBetweenLabels="200" />
-					<controls:AbstractTimeLineHeaderFactory Name="DayHeader" TimeStepSize="Day" MinimumPixelsBetweenLabels="200" />
-					<controls:AbstractTimeLineHeaderFactory Name="DayQuarterHeader" StepSize="06:00:00" MinimumPixelsBetweenLabels="200" />
-					<controls:AbstractTimeLineHeaderFactory Name="HourHeader" TimeStepSize="Hour" MinimumPixelsBetweenLabels="200" />
-					<controls:AbstractTimeLineHeaderFactory Name="QuarterHeader" StepSize="00:15:00" MinimumPixelsBetweenLabels="200" />
+					<factories:AbstractTimeLineHeaderFactory Name="YearHeader" TimeStepSize="Year" MinimumPixelsBetweenLabels="200" />
+					<factories:AbstractTimeLineHeaderFactory Name="MonthHeader" TimeStepSize="Month" MinimumPixelsBetweenLabels="200" />
+					<factories:AbstractTimeLineHeaderFactory Name="WeekHeader" StepSize="7.00:00:00" MinimumPixelsBetweenLabels="200" />
+					<factories:AbstractTimeLineHeaderFactory Name="DayHeader" TimeStepSize="Day" MinimumPixelsBetweenLabels="200" />
+					<factories:AbstractTimeLineHeaderFactory Name="DayQuarterHeader" StepSize="06:00:00" MinimumPixelsBetweenLabels="200" />
+					<factories:AbstractTimeLineHeaderFactory Name="HourHeader" TimeStepSize="Hour" MinimumPixelsBetweenLabels="200" />
+					<factories:AbstractTimeLineHeaderFactory Name="QuarterHeader" StepSize="00:15:00" MinimumPixelsBetweenLabels="200" />
 					<!-- Breadcrumb labels underneath headers. -->
-					<controls:TimeLineBreadcrumbFactory Name="YearBreadcrumbs" TimeStepSize="Year" MinimumPixelsBetweenLabels="200" />
-					<controls:TimeLineBreadcrumbFactory Name="MonthBreadcrumbs" TimeStepSize="Month" MinimumPixelsBetweenLabels="200" />
-					<controls:TimeLineBreadcrumbFactory Name="WeekBreadcrumbs" StepSize="7.00:00:00" MinimumPixelsBetweenLabels="200" />
-					<controls:TimeLineBreadcrumbFactory Name="DayBreadcrumbs" TimeStepSize="Day" MinimumPixelsBetweenLabels="200" />
-					<controls:TimeLineBreadcrumbFactory Name="DayQuarterBreadcrumbs" StepSize="06:00:00" MinimumPixelsBetweenLabels="200" />
-					<controls:TimeLineBreadcrumbFactory Name="HourBreadcrumbs" TimeStepSize="Hour" MinimumPixelsBetweenLabels="200" />
-					<controls:TimeLineBreadcrumbFactory Name="QuarterBreadcrumbs" StepSize="00:15:00" MinimumPixelsBetweenLabels="200" />
+					<factories:TimeLineBreadcrumbFactory Name="YearBreadcrumbs" TimeStepSize="Year" MinimumPixelsBetweenLabels="200" />
+					<factories:TimeLineBreadcrumbFactory Name="MonthBreadcrumbs" TimeStepSize="Month" MinimumPixelsBetweenLabels="200" />
+					<factories:TimeLineBreadcrumbFactory Name="WeekBreadcrumbs" StepSize="7.00:00:00" MinimumPixelsBetweenLabels="200" />
+					<factories:TimeLineBreadcrumbFactory Name="DayBreadcrumbs" TimeStepSize="Day" MinimumPixelsBetweenLabels="200" />
+					<factories:TimeLineBreadcrumbFactory Name="DayQuarterBreadcrumbs" StepSize="06:00:00" MinimumPixelsBetweenLabels="200" />
+					<factories:TimeLineBreadcrumbFactory Name="HourBreadcrumbs" TimeStepSize="Hour" MinimumPixelsBetweenLabels="200" />
+					<factories:TimeLineBreadcrumbFactory Name="QuarterBreadcrumbs" StepSize="00:15:00" MinimumPixelsBetweenLabels="200" />
 					<!-- Fixed elements. -->
-					<controls:TimeLineLabelCollection>
+					<factories:TimeLineLabelCollection>
 						<controls:TimeIndicator />
-					</controls:TimeLineLabelCollection>
-				</controls:TimeLineLabelFactories>
+					</factories:TimeLineLabelCollection>
+				</factories:TimeLineLabelFactories>
 			</Setter.Value>
 		</Setter>
 		<Setter Property="Template">

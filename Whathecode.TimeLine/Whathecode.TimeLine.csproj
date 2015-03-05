@@ -53,18 +53,18 @@
   <ItemGroup>
     <Compile Include="AbstractTickLabelConverter.cs" />
     <Compile Include="TickLabelConverter.cs" />
-    <Compile Include="AbstractTimeIntervalLabelFactory.cs" />
-    <Compile Include="TimeLineBreadcrumbFactory.cs" />
+    <Compile Include="LabelFactories\AbstractTimeIntervalLabelFactory.cs" />
+    <Compile Include="LabelFactories\TimeLineBreadcrumbFactory.cs" />
     <Compile Include="TimeLineBreadcrumb.cs" />
     <Compile Include="TimeLineHeader.cs" />
     <Compile Include="TimeLineContextLabel.cs" />
-    <Compile Include="TimeLineContextLabelFactory.cs" />
-    <Compile Include="TimeLineHeaderFactory.cs" />
-    <Compile Include="TimeLinePushLabelFactory.cs" />
-    <Compile Include="TimeLineTickFactory.cs" />
+    <Compile Include="LabelFactories\TimeLineContextLabelFactory.cs" />
+    <Compile Include="LabelFactories\TimeLineHeaderFactory.cs" />
+    <Compile Include="LabelFactories\TimeLinePushLabelFactory.cs" />
+    <Compile Include="LabelFactories\TimeLineTickFactory.cs" />
     <Compile Include="TimeLineTick.cs" />
-    <Compile Include="TimeLineLabelCollection.cs" />
-    <Compile Include="TimeLineLabelFactories.cs" />
+    <Compile Include="LabelFactories\TimeLineLabelCollection.cs" />
+    <Compile Include="LabelFactories\TimeLineLabelFactories.cs" />
     <Compile Include="TimeControl.cs" />
     <Compile Include="TimeControlItem.cs" />
     <Compile Include="TimeIndicator.cs" />

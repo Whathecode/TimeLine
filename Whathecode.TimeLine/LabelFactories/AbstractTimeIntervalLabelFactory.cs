@@ -5,7 +5,7 @@ using Whathecode.System.Extensions;
 using Whathecode.System.Windows.Controls;
 
 
-namespace Whathecode.TimeLine
+namespace Whathecode.TimeLine.LabelFactories
 {
 	public abstract class AbstractTimeIntervalLabelFactory : AbstractRegularXLabelFactory<DateTime, TimeSpan, double, double>
 	{
