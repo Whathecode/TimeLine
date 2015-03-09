@@ -57,12 +57,8 @@ namespace Whathecode.TimeLine
 				case "YearBreadcrumbs":
 					return occurance.ToString( "yyyy" );
 				case "MonthBreadcrumbs":
-				case "WeekBreadcrumbs":
 					return occurance.ToString( "Y" );
 				case "DayBreadcrumbs":
-				case "DayQuarterBreadcrumbs":
-				case "HourBreadcrumbs":
-				case "QuarterBreadcrumbs":
 					return occurance.ToString( "D" );
 			}
 

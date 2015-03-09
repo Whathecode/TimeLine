@@ -58,7 +58,7 @@ namespace TimeLineTest
 			_properties = new NotifyPropertyFactory<Properties>( this, () => PropertyChanged );
 			Items = new ObservableCollection<object>();
 			CurrentTime = now;
-			TimeSpan zoom = TimeSpan.FromDays( 200 );
+			TimeSpan zoom = TimeSpan.FromHours( 0.1 );
 			VisibleInterval = new TimeInterval( CurrentTime - zoom, CurrentTime + zoom );
 			//VisibleInterval = new Interval<DateTime, TimeSpan>( new DateTime( 2015, 3, 3, 13, 0, 0 ),  new DateTime( 2015, 3, 3, 14, 0, 0 ) );
 
@@ -66,8 +66,8 @@ namespace TimeLineTest
 			update.Elapsed += ( sender, args ) =>
 			{
 				CurrentTime = DateTime.Now;
-				//VisibleInterval = VisibleInterval.Move( TimeSpan.FromSeconds( 20 ) );
-				VisibleInterval = VisibleInterval.Scale( 1.01 );
+				VisibleInterval = VisibleInterval.Move( TimeSpan.FromSeconds( 20 ) );
+				//VisibleInterval = VisibleInterval.Scale( 1.01 );
 			};
 			update.Start();
 

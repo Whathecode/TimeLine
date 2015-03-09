@@ -92,11 +92,7 @@ namespace Whathecode.TimeLine
 				// Breadcrumb labels underneath headers.
 				new TimeLineBreadcrumbFactory { Name = "YearBreadcrumbs", TimeStepSize = DateTimePart.Year, MinimumPixelsBetweenLabels = 200 },
 				new TimeLineBreadcrumbFactory { Name = "MonthBreadcrumbs", TimeStepSize = DateTimePart.Month, MinimumPixelsBetweenLabels = 200 },
-				new TimeLineBreadcrumbFactory { Name = "WeekBreadcrumbs", StepSize = TimeSpan.FromDays( 7 ), MinimumPixelsBetweenLabels = 200 },
 				new TimeLineBreadcrumbFactory { Name = "DayBreadcrumbs", TimeStepSize = DateTimePart.Day, MinimumPixelsBetweenLabels = 200 },
-				new TimeLineBreadcrumbFactory { Name = "DayQuarterBreadcrumbs", StepSize = TimeSpan.FromHours( 6 ), MinimumPixelsBetweenLabels = 200 },
-				new TimeLineBreadcrumbFactory { Name = "HourBreadcrumbs", TimeStepSize = DateTimePart.Hour, MinimumPixelsBetweenLabels = 200 },
-				new TimeLineBreadcrumbFactory { Name = "QuarterBreadcrumbs", StepSize = TimeSpan.FromMinutes( 15 ), MinimumPixelsBetweenLabels = 200 },
 				// Fixed elements.
 				new TimeLineLabelCollection { new TimeIndicator() }
 			};
