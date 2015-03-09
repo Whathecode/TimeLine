@@ -3,7 +3,7 @@
 
 namespace Whathecode.TimeLine.LabelFactories
 {
-	public class AbstractTimeLineHeaderFactory : AbstractTimeLinePushLabelFactory
+	public class TimeLineHeaderFactory : AbstractTimeLinePushLabelFactory
 	{
 		protected override FrameworkElement CreateLabel()
 		{

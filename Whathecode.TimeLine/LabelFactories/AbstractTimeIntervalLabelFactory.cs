@@ -75,7 +75,7 @@ namespace Whathecode.TimeLine.LabelFactories
 				}
 
 				DateTime last = xInterval.End.Round( TimeStepSize.Value );
-				while ( current != last )
+				while ( current < last )
 				{
 					switch ( TimeStepSize )
 					{

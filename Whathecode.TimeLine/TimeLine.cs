@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Windows;
+using Whathecode.System;
 using Whathecode.System.Linq;
 using Whathecode.System.Windows.Controls;
 using Whathecode.System.Windows.DependencyPropertyFactory;
@@ -36,21 +37,21 @@ namespace Whathecode.TimeLine
 			set { Factory.SetValue( this, TimeLineProperties.LabelFactories, value ); }
 		}
 
-		[DependencyProperty( TimeLineProperties.DominantTickFactory )]
+		[DependencyProperty( TimeLineProperties.DominantTickFactory, DefaultValue = "" )]
 		public string DominantTickFactory
 		{
 			get { return (string)Factory.GetValue( this, TimeLineProperties.DominantTickFactory ); }
 			private set { Factory.SetValue( this,TimeLineProperties.DominantTickFactory, value ); }
 		}
 
-		[DependencyProperty( TimeLineProperties.DominantHeaderFactory )]
+		[DependencyProperty( TimeLineProperties.DominantHeaderFactory, DefaultValue = "" )]
 		public string DominantHeaderFactory
 		{
 			get { return (string)Factory.GetValue( this, TimeLineProperties.DominantHeaderFactory ); }
 			private set { Factory.SetValue( this,TimeLineProperties.DominantHeaderFactory, value ); }
 		}
 
-		[DependencyProperty( TimeLineProperties.DominantBreadcrumbFactory )]
+		[DependencyProperty( TimeLineProperties.DominantBreadcrumbFactory, DefaultValue = "" )]
 		public string DominantBreadcrumbFactory
 		{
 			get { return (string)Factory.GetValue( this, TimeLineProperties.DominantBreadcrumbFactory ); }
@@ -61,7 +62,46 @@ namespace Whathecode.TimeLine
 		static TimeLine()
 		{
 			DefaultStyleKeyProperty.OverrideMetadata( Type, new FrameworkPropertyMetadata( Type ) );
+			VisibleIntervalProperty.AddOwner( typeof( TimeLine ) );
 		}
+
+		public TimeLine()
+		{
+			LabelFactories = new TimeLineLabelFactories
+			{
+				// Ticks, from quarters to years.
+				new TimeLineTickFactory { Name="Quarters", StepSize = TimeSpan.FromMinutes( 15 ), MinimumPixelsBetweenLabels = 60, OverrideGroup = "Ticks" },
+				new TimeLineTickFactory { Name="Hours", TimeStepSize = DateTimePart.Hour, MinimumPixelsBetweenLabels = 60, OverrideGroup = "Ticks" },
+				new TimeLineTickFactory { Name="DayQuarters", StepSize = TimeSpan.FromHours( 6 ), MinimumPixelsBetweenLabels = 60, OverrideGroup = "Ticks" },
+				new TimeLineTickFactory { Name="Days", TimeStepSize = DateTimePart.Day, MinimumPixelsBetweenLabels = 50, OverrideGroup = "Ticks" },
+				new TimeLineTickFactory { Name="Weeks", StepSize = TimeSpan.FromDays( 7 ), MinimumPixelsBetweenLabels = 60, OverrideGroup = "Ticks" },
+				new TimeLineTickFactory { Name="Months", TimeStepSize = DateTimePart.Month, MinimumPixelsBetweenLabels = 50, OverrideGroup = "Ticks" },
+				new TimeLineTickFactory { Name="Years", TimeStepSize = DateTimePart.Year, MinimumPixelsBetweenLabels = 60, OverrideGroup = "Ticks" },
+				// Additional context labels at bottom.
+				new TimeLineContextLabelFactory { Name = "DayContext", TimeStepSize = DateTimePart.Day, MinimumPixelsBetweenLabels = 50, FixedY = 100 },
+				new TimeLineContextLabelFactory { Name = "MonthContext", TimeStepSize = DateTimePart.Month, MinimumPixelsBetweenLabels = 100, FixedY = 100 },
+				new TimeLineContextLabelFactory { Name = "YearContext", TimeStepSize = DateTimePart.Year, MinimumPixelsBetweenLabels = 100, FixedY = 100 },
+				// Header labels.
+				new TimeLineHeaderFactory { Name = "YearHeader", TimeStepSize = DateTimePart.Year, MinimumPixelsBetweenLabels = 200 },
+				new TimeLineHeaderFactory { Name = "MonthHeader", TimeStepSize = DateTimePart.Month, MinimumPixelsBetweenLabels = 200 },
+				new TimeLineHeaderFactory { Name = "WeekHeader", StepSize = TimeSpan.FromDays( 7 ), MinimumPixelsBetweenLabels = 200 },
+				new TimeLineHeaderFactory { Name = "DayHeader", TimeStepSize = DateTimePart.Day, MinimumPixelsBetweenLabels = 200 },
+				new TimeLineHeaderFactory { Name = "DayQuarterHeader", StepSize = TimeSpan.FromHours( 6 ), MinimumPixelsBetweenLabels = 200 },
+				new TimeLineHeaderFactory { Name = "HourHeader", TimeStepSize = DateTimePart.Hour, MinimumPixelsBetweenLabels = 200 },
+				new TimeLineHeaderFactory { Name = "QuarterHeader", StepSize = TimeSpan.FromMinutes( 15 ), MinimumPixelsBetweenLabels = 200 },
+				// Breadcrumb labels underneath headers.
+				new TimeLineBreadcrumbFactory { Name = "YearBreadcrumbs", TimeStepSize = DateTimePart.Year, MinimumPixelsBetweenLabels = 200 },
+				new TimeLineBreadcrumbFactory { Name = "MonthBreadcrumbs", TimeStepSize = DateTimePart.Month, MinimumPixelsBetweenLabels = 200 },
+				new TimeLineBreadcrumbFactory { Name = "WeekBreadcrumbs", StepSize = TimeSpan.FromDays( 7 ), MinimumPixelsBetweenLabels = 200 },
+				new TimeLineBreadcrumbFactory { Name = "DayBreadcrumbs", TimeStepSize = DateTimePart.Day, MinimumPixelsBetweenLabels = 200 },
+				new TimeLineBreadcrumbFactory { Name = "DayQuarterBreadcrumbs", StepSize = TimeSpan.FromHours( 6 ), MinimumPixelsBetweenLabels = 200 },
+				new TimeLineBreadcrumbFactory { Name = "HourBreadcrumbs", TimeStepSize = DateTimePart.Hour, MinimumPixelsBetweenLabels = 200 },
+				new TimeLineBreadcrumbFactory { Name = "QuarterBreadcrumbs", StepSize = TimeSpan.FromMinutes( 15 ), MinimumPixelsBetweenLabels = 200 },
+				// Fixed elements.
+				new TimeLineLabelCollection { new TimeIndicator() }
+			};
+		}
+
 
 		public override void OnApplyTemplate()
 		{
@@ -84,10 +124,10 @@ namespace Whathecode.TimeLine
 
 					// Get dominant header and breadcrumb factories.
 					var dontFit = LabelFactories
-						.OfType<AbstractTimeLineHeaderFactory>()  // Get the smallest interval which is too large to fit the screen vertically.
+						.OfType<TimeLineHeaderFactory>()  // Get the smallest interval which is too large to fit the screen vertically.
 						.Where( f => ( (double)f.MaximumLabelSize.Ticks / VisibleInterval.Size.Ticks ) * ActualWidth > ActualHeight )
 						.ToList();
-					AbstractTimeLineHeaderFactory currentHeaderFactory = dontFit.Count == 0 ? null : dontFit.MinBy( f => f.MaximumLabelSize );
+					TimeLineHeaderFactory currentHeaderFactory = dontFit.Count == 0 ? null : dontFit.MinBy( f => f.MaximumLabelSize );
 					if ( currentHeaderFactory != null )
 					{
 						DominantHeaderFactory = currentHeaderFactory.Name;

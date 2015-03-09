@@ -60,7 +60,7 @@
     <Compile Include="TimeLineContextLabel.cs" />
     <Compile Include="LabelFactories\TimeLineContextLabelFactory.cs" />
     <Compile Include="LabelFactories\TimeLineHeaderFactory.cs" />
-    <Compile Include="LabelFactories\TimeLinePushLabelFactory.cs" />
+    <Compile Include="LabelFactories\AbstractTimeLinePushLabelFactory.cs" />
     <Compile Include="LabelFactories\TimeLineTickFactory.cs" />
     <Compile Include="TimeLineTick.cs" />
     <Compile Include="LabelFactories\TimeLineLabelCollection.cs" />

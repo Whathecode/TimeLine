@@ -15,6 +15,8 @@ namespace Whathecode.TimeLine.LabelFactories
 			// Actual X position is changed for the label to be 'pushed off' the screen by the next label.
 			TimeLineItem header = (TimeLineItem)positioned.Element;
 			header.Occurance = (DateTime)header.GetValue( TimePanel.XProperty );
+
+			UpdateLabel( positioned, visible, panelSize );
 		}
 
 		protected override void UpdateLabel( PositionedElement label, AxesIntervals<DateTime, TimeSpan, double, double> visible, Size panelSize )
