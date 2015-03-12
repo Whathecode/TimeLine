@@ -58,7 +58,7 @@ namespace TimeLineTest
 			_properties = new NotifyPropertyFactory<Properties>( this, () => PropertyChanged );
 			Items = new ObservableCollection<object>();
 			CurrentTime = now;
-			TimeSpan zoom = TimeSpan.FromHours( 0.1 );
+			TimeSpan zoom = TimeSpan.FromHours( 24 );
 			VisibleInterval = new TimeInterval( CurrentTime - zoom, CurrentTime + zoom );
 			//VisibleInterval = new Interval<DateTime, TimeSpan>( new DateTime( 2015, 3, 3, 13, 0, 0 ),  new DateTime( 2015, 3, 3, 14, 0, 0 ) );
 
@@ -66,14 +66,15 @@ namespace TimeLineTest
 			update.Elapsed += ( sender, args ) =>
 			{
 				CurrentTime = DateTime.Now;
-				VisibleInterval = VisibleInterval.Move( TimeSpan.FromSeconds( 20 ) );
+				//VisibleInterval = VisibleInterval.Move( TimeSpan.FromSeconds( 20 ) );
 				//VisibleInterval = VisibleInterval.Scale( 1.01 );
 			};
 			update.Start();
 
 			InitializeComponent();
 
-			TimeControlItem test = new TimeControlItem
+			// Try adding an item with the corresponding container.
+			var test = new TimeControlItem
 			{
 				Content = new Border
 				{
@@ -84,10 +85,32 @@ namespace TimeLineTest
 					BorderBrush = Brushes.White,
 					BorderThickness = new Thickness( 2 )
 				},
-				Occurance = now
+				Occurance = now,
 			};
+			test.DataContext = test;
 			test.SetValue( TimePanel.YProperty, 50.0 );
 			Items.Add( test );
+
+			// Try adding an item which is too wide.
+			var tooWide = new TimeControlItem
+			{
+				Content = new Border
+				{
+					Background = Brushes.Red,
+					Height = 50,
+					CornerRadius = new CornerRadius( 5 ),
+					BorderBrush = Brushes.White,
+					BorderThickness = new Thickness( 2 )
+				},
+				Occurance = VisibleInterval.Start - zoom
+			};
+			tooWide.DataContext = tooWide;
+			tooWide.SetValue( TimePanel.SizeXProperty, TimeSpan.FromTicks( zoom.Ticks * 4 ) );
+			tooWide.SetValue( TimePanel.YProperty, 20.0 );
+			Items.Add( tooWide );
+
+			// Try adding an item without a container using data template.
+			Items.Add( new TimeObject() );
 		}
 	}
 }

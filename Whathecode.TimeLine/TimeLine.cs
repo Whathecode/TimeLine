@@ -67,6 +67,9 @@ namespace Whathecode.TimeLine
 
 		public TimeLine()
 		{
+			// TODO: Could intervals be specified in style, and factory instances initialized in code behind?
+			//       Currently this is initialized in code-behind since XAML resources are reused,
+			//       and the factories contain generated labels belonging to a specific TimeLine instance.
 			LabelFactories = new TimeLineLabelFactories
 			{
 				// Ticks, from quarters to years.

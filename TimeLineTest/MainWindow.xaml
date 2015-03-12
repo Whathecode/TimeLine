@@ -4,6 +4,8 @@
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:options="http://schemas.microsoft.com/winfx/2006/xaml/presentation/options"
 	xmlns:timeLine="clr-namespace:Whathecode.TimeLine;assembly=Whathecode.TimeLine"
+	xmlns:timeLineTest="clr-namespace:TimeLineTest"
+	xmlns:controls="clr-namespace:Whathecode.System.Windows.Controls;assembly=Whathecode.PresentationFramework"
 	Title="Time Line Test"
 	DataContext="{Binding RelativeSource={RelativeSource Self}}"
 	FontFamily="Segoe UI Light"
@@ -28,6 +30,14 @@
 			Foreground="White"
 			FontSize="20">
 		
+			<timeLine:TimeLine.ItemContainerStyle>
+				<Style TargetType="timeLine:TimeControlItem">
+					<Setter
+						Property="controls:TimePanel.X"
+						Value="{Binding Occurance}" />
+				</Style>
+			</timeLine:TimeLine.ItemContainerStyle>
+			
 			<timeLine:TimeLine.Resources>
 				<Style TargetType="timeLine:TimeIndicator">
 					<Setter Property="Fill">
@@ -44,6 +54,10 @@
 				<Style TargetType="timeLine:TimeLineBreadcrumb">
 					<Setter Property="Foreground" Value="WhiteSmoke" />
 				</Style>
+				
+				<DataTemplate DataType="{x:Type timeLineTest:TimeObject}">
+					<Button Content="{Binding Occurance}" />
+				</DataTemplate>
 			</timeLine:TimeLine.Resources>
 		
 		</timeLine:TimeLine>
