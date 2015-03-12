@@ -78,7 +78,9 @@
 								VisibleIntervalX="{TemplateBinding VisibleInterval}" />
 						</Border>
 						<!-- ItemsSource elements -->
+						<!-- The contents of the time line should not overlap with the labels, hence the Margin. -->
 						<Border
+							Margin="0, 105, 0, 13"
 							Padding="{TemplateBinding Padding}"
 							BorderBrush="{TemplateBinding BorderBrush}"
 							BorderThickness="{TemplateBinding BorderThickness}">
