@@ -60,9 +60,26 @@ namespace Whathecode.TimeLine.LabelFactories
 		{
 			if ( TimeStepSize == null )
 			{
-				foreach ( var x in base.GetXValues( intervals ) )
+				// Manually iterate interval in order to prevent ArgumentOutOfRangeException when stepping beyond DateTime.MaxValue.
+				IEnumerator<DateTime> xValues = base.GetXValues( intervals ).GetEnumerator();
+				bool hasMoreValues = true;
+				DateTime? current = null;
+				while ( hasMoreValues )
 				{
-					yield return x;
+					if ( current != null )
+					{
+						TimeSpan maxAddition = DateTime.MaxValue - current.Value;
+						if ( StepSize > maxAddition )
+						{
+							break;
+						}
+					}
+					hasMoreValues = xValues.MoveNext();
+					if ( hasMoreValues )
+					{
+						current = xValues.Current;
+						yield return current.Value;
+					}
 				}
 			}
 			else
