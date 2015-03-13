@@ -71,6 +71,7 @@
     <Compile Include="TimeIndicator.cs" />
     <Compile Include="TimeLine.cs" />
     <Compile Include="TimeLineItem.cs" />
+    <Compile Include="VisibleIntervalCoercion.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">

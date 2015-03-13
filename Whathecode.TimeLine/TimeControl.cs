@@ -4,18 +4,20 @@ using System.Windows.Controls;
 using Whathecode.System.Arithmetic.Range;
 using Whathecode.System.Windows.DependencyPropertyFactory;
 using Whathecode.System.Windows.DependencyPropertyFactory.Attributes;
+using Whathecode.System.Windows.DependencyPropertyFactory.Attributes.Coercion;
 
 
 namespace Whathecode.TimeLine
 {
 	public class TimeControl : ItemsControl
 	{
+		[Flags]
 		public enum Properties
 		{
-			VisibleInterval,
-			MinimumInterval,
-			MaximumInterval,
-			CurrentTime
+			VisibleInterval = 1,
+			MinimumInterval = 1 << 1,
+			MaximumInterval = 1 << 2,
+			CurrentTime = 1 << 3
 		}
 
 
@@ -44,6 +46,7 @@ namespace Whathecode.TimeLine
 		public static readonly DependencyProperty CurrentTimeProperty = PropertyFactory[ Properties.CurrentTime ];
 
 		[DependencyProperty( Properties.VisibleInterval, DefaultValueProvider = typeof( DefaultProvider ) )]
+		[CoercionHandler( typeof( VisibleIntervalCoercion ) )]
 		public Interval<DateTime, TimeSpan> VisibleInterval
 		{
 			get { return (Interval<DateTime, TimeSpan>)PropertyFactory.GetValue( this, Properties.VisibleInterval ); }
