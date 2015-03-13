@@ -7,7 +7,10 @@ namespace Whathecode.TimeLine.LabelFactories
 {
 	public class TimeLineLabelCollection : AbstractAxesLabelCollection<DateTime, TimeSpan, double, double>
 	{
-		public override void VisibleIntervalChanged( AxesIntervals<DateTime, TimeSpan, double, double> visible, Size panelSize )
+		public override void VisibleIntervalChanged(
+			AxesIntervals<DateTime, TimeSpan, double, double> visible,
+			AxesIntervals<DateTime, TimeSpan, double, double> limits,
+			Size panelSize )
 		{
 			// Nothing to do.
 		}
