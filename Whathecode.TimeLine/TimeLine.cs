@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Windows;
 using Whathecode.System;
+using Whathecode.System.Arithmetic.Range;
 using Whathecode.System.Linq;
 using Whathecode.System.Windows.Controls;
 using Whathecode.System.Windows.DependencyPropertyFactory;
@@ -28,6 +29,8 @@ namespace Whathecode.TimeLine
 		public static readonly DependencyProperty DominantTickFactoryProperty = Factory[ TimeLineProperties.DominantTickFactory ];
 		public static readonly DependencyProperty DominantHeaderFactoryProperty = Factory[ TimeLineProperties.DominantHeaderFactory ];
 		public static readonly DependencyProperty DominantBreadcrumbFactoryProperty = Factory[ TimeLineProperties.DominantBreadcrumbFactory ];
+
+		TimePanel _timePanel;
 
 
 		[DependencyProperty( TimeLineProperties.LabelFactories )]
@@ -62,8 +65,8 @@ namespace Whathecode.TimeLine
 		static TimeLine()
 		{
 			DefaultStyleKeyProperty.OverrideMetadata( Type, new FrameworkPropertyMetadata( Type ) );
-			VisibleIntervalProperty.AddOwner( typeof( TimeLine ) );
 		}
+
 
 		public TimeLine()
 		{
@@ -106,14 +109,14 @@ namespace Whathecode.TimeLine
 		{
 			base.OnApplyTemplate();
 
-			TimePanel panel = (TimePanel)GetTemplateChild( "PART_Labels" );
-			if ( panel == null )
+			_timePanel = (TimePanel)GetTemplateChild( "PART_Labels" );
+			if ( _timePanel == null )
 			{
 				return;
 			}
 
 			// Identify the dominant labels before they are displayed.
-			panel.LayoutUpdated += ( sender, args ) =>
+			_timePanel.LayoutUpdated += ( sender, args ) =>
 			{
 				if ( LabelFactories != null )
 				{
@@ -144,6 +147,11 @@ namespace Whathecode.TimeLine
 					}
 				}
 			};
+		}
+
+		public Interval<DateTime, TimeSpan> GetCoercedVisibleInterval()
+		{
+			return _timePanel != null ? _timePanel.VisibleIntervalX : VisibleInterval;
 		}
 	}
 }

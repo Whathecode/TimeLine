@@ -13,6 +13,8 @@ namespace Whathecode.TimeLine
 		public enum Properties
 		{
 			VisibleInterval,
+			MinimumInterval,
+			MaximumInterval,
 			CurrentTime
 		}
 
@@ -37,6 +39,8 @@ namespace Whathecode.TimeLine
 		static readonly Type Type = typeof( TimeControl );
 		public static DependencyPropertyFactory<Properties> PropertyFactory = new DependencyPropertyFactory<Properties>();
 		public static DependencyProperty VisibleIntervalProperty = PropertyFactory[ Properties.VisibleInterval ];
+		public static readonly DependencyProperty MinimumIntervalProperty = PropertyFactory[ Properties.MinimumInterval ];
+		public static readonly DependencyProperty MaximumIntervalProperty = PropertyFactory[ Properties.MaximumInterval ];
 		public static readonly DependencyProperty CurrentTimeProperty = PropertyFactory[ Properties.CurrentTime ];
 
 		[DependencyProperty( Properties.VisibleInterval, DefaultValueProvider = typeof( DefaultProvider ) )]
@@ -44,6 +48,20 @@ namespace Whathecode.TimeLine
 		{
 			get { return (Interval<DateTime, TimeSpan>)PropertyFactory.GetValue( this, Properties.VisibleInterval ); }
 			set { PropertyFactory.SetValue( this, Properties.VisibleInterval, value ); }
+		}
+
+		[DependencyProperty( Properties.MinimumInterval, DefaultValue = "00:30:00" )]
+		public TimeSpan MinimumInterval
+		{
+			get { return (TimeSpan)PropertyFactory.GetValue( this, Properties.MinimumInterval ); }
+			set { PropertyFactory.SetValue( this, Properties.MinimumInterval, value ); }
+		}
+
+		[DependencyProperty( Properties.MaximumInterval, DefaultValue = "650.00:00:00")]
+		public TimeSpan MaximumInterval
+		{
+			get { return (TimeSpan)PropertyFactory.GetValue( this, Properties.MaximumInterval ); }
+			set { PropertyFactory.SetValue( this, Properties.MaximumInterval, value ); }
 		}
 
 		[DependencyProperty( Properties.CurrentTime )]

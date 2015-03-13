@@ -31,6 +31,8 @@
 			<Setter.Value>
 				<ItemsPanelTemplate>
 					<wtc:TimePanel
+						MinimumSizeX="{Binding MinimumInterval, RelativeSource={RelativeSource AncestorType=controls:TimeControl}}"
+						MaximumSizeX="{Binding MaximumInterval, RelativeSource={RelativeSource AncestorType=controls:TimeControl}}"
 						VisibleIntervalX="{Binding VisibleInterval, RelativeSource={RelativeSource AncestorType=controls:TimeControl}}" />
 				</ItemsPanelTemplate>
 			</Setter.Value>
@@ -75,6 +77,8 @@
 							<wtc:TimePanel
 								x:Name="PART_Labels"
 								LabelFactories="{TemplateBinding LabelFactories}"
+								MinimumSizeX="{TemplateBinding MinimumInterval}"
+								MaximumSizeX="{TemplateBinding MaximumInterval}"
 								VisibleIntervalX="{TemplateBinding VisibleInterval}" />
 						</Border>
 						<!-- ItemsSource elements -->
