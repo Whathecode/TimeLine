@@ -84,7 +84,7 @@
 						<!-- ItemsSource elements -->
 						<!-- The contents of the time line should not overlap with the labels, hence the Margin. -->
 						<Border
-							Margin="0, 105, 0, 13"
+							Margin="0, 96, 0, 46"
 							Padding="{TemplateBinding Padding}"
 							BorderBrush="{TemplateBinding BorderBrush}"
 							BorderThickness="{TemplateBinding BorderThickness}">
